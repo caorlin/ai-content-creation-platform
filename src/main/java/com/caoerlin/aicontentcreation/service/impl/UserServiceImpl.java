@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //判断账户是否存在
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUserAccount, userAccount);
-        int count = count(wrapper);
+        long count = count(wrapper);
         if (count > 0) {
             log.error("该账户已存在,userAccount:{}", userAccount);
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "账户已存在");
@@ -69,7 +69,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
-            user.setUsername("创作者" + UUID.randomUUID());
+            //处理用户名称
+            String name = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+            user.setUsername("创作者" + name);
             user.setUserRole(UserRoleEnum.USER.getValue());
             //插入数据
             boolean result = save(user);
