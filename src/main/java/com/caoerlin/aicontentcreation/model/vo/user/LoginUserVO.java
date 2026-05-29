@@ -14,7 +14,7 @@ public class LoginUserVO implements Serializable {
     @Schema(description = "账号名称")
     private String userAccount;
     @Schema(description = "用户名")
-    private String userName;
+    private String username;
     @Schema(description = "用户头像")
     private String userAvatar;
     @Schema(description = "用户简介")

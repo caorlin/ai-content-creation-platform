@@ -10,7 +10,7 @@
             <result property="userPassword" column="user_password" />
             <result property="username" column="username" />
             <result property="userAvatar" column="user_avatar" />
-            <result property="userprofile" column="user_profile" />
+            <result property="userProfile" column="user_profile" />
             <result property="userRole" column="user_role" />
             <result property="editTime" column="edit_time" />
             <result property="createTime" column="create_time" />

@@ -5,10 +5,14 @@ import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.common.exception.ThrowUtils;
 import com.caoerlin.aicontentcreation.common.response.BaseResponse;
 import com.caoerlin.aicontentcreation.common.response.ResultUtils;
+import com.caoerlin.aicontentcreation.model.dto.user.UserLoginRequest;
 import com.caoerlin.aicontentcreation.model.dto.user.UserRegisterRequest;
+import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 import com.caoerlin.aicontentcreation.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,5 +39,13 @@ public class UserController {
         String userPassword = request.getUserPassword();
         String checkPassword = request.getCheckPassword();
         return ResultUtils.success(userService.userRegister(userAccount, userPassword, checkPassword));
+    }
+
+    @PostMapping("login")
+    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+        ThrowUtils.throwIf(ObjectUtil.isNull(userLoginRequest), ErrorCode.PARAMS_ERROR);
+        String userAccount = userLoginRequest.getUserAccount();
+        String userPassword = userLoginRequest.getUserPassword();
+        return ResultUtils.success(userService.userLogin(userAccount, userPassword, request));
     }
 }
