@@ -24,8 +24,8 @@ knife4j:
   setting:
     language: zh_cn
 mybatis-plus:
-  config-location: classpath*:/mapper/*.mapper
-  type-aliases-package: com.caoerlin.aicontentcreation.model.dto
+  mapper-locations: classpath*:/mapper/*.mapper
+  type-aliases-package: com.caoerlin.aicontentcreation.model.dto.user
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
