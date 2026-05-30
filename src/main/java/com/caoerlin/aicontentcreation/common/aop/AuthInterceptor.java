@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static com.caoerlin.aicontentcreation.constant.UserConstant.USER_LOGIN_STATE;
-
 @Aspect
 @Component
 @RequiredArgsConstructor
@@ -33,7 +31,7 @@ public class AuthInterceptor {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         //获取当前登录对象信息
-        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        User user = userService.getLoginUser(request);
         //根据注解填入角色获取对应的角色enum
         UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
         if (ObjectUtil.isNull(mustRoleEnum)) {
