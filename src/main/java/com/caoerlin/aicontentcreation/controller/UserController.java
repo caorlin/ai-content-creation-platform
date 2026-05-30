@@ -145,7 +145,7 @@ public class UserController {
         ThrowUtils.throwIf(userQueryRequest == null, ErrorCode.PARAMS_ERROR);
         long pageNum = userQueryRequest.getPageNum();
         long pageSize = userQueryRequest.getPageSize();
-        Page<User> userPage = userService.getUserPage(pageNum,pageSize);
+        Page<User> userPage = userService.getUserPage(pageNum, pageSize, userQueryRequest);
         // 数据脱敏
         Page<UserVO> userVOPage = new Page<>(pageNum, pageSize, userPage.getTotal());
         List<UserVO> userVOList = userService.getUserVOList(userPage.getRecords());

@@ -1,6 +1,9 @@
 package com.caoerlin.aicontentcreation.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.caoerlin.aicontentcreation.model.dto.user.UserQueryRequest;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
@@ -78,9 +81,18 @@ public interface UserService extends IService<User> {
     /**
      * 获取用户查询页
      *
-     * @param pageNum 页号
-     * @param pageSize 页数
+     * @param pageNum          页号
+     * @param pageSize         页数
+     * @param userQueryRequest 查询条件
      * @return
      */
-    Page<User> getUserPage(long pageNum, long pageSize);
+    Page<User> getUserPage(long pageNum, long pageSize, UserQueryRequest userQueryRequest);
+
+    /**
+     * 查询对象转换为 QueryWrapper对象
+     *
+     * @param userQueryRequest
+     * @return
+     */
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 }

@@ -5,11 +5,13 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoerlin.aicontentcreation.common.exception.BusinessException;
 import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.constant.UserConstant;
+import com.caoerlin.aicontentcreation.model.dto.user.UserQueryRequest;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
@@ -183,9 +185,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public Page<User> getUserPage(long pageNum, long pageSize) {
+    public Page<User> getUserPage(long pageNum, long pageSize, UserQueryRequest userQueryRequest) {
         Page<User> page = new Page<>(pageNum, pageSize);
-        return userMapper.selectPage(page,null);
+        QueryWrapper<User> wrapper = getQueryWrapper(userQueryRequest);
+        return userMapper.selectPage(page, wrapper);
+    }
+
+    @Override
+    public QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest) {
+
+        if (ObjectUtil.isNull(userQueryRequest)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        Long id = userQueryRequest.getId();
+        String userAccount = userQueryRequest.getUserAccount();
+        String userName = userQueryRequest.getUserName();
+        String userProfile = userQueryRequest.getUserProfile();
+        String userRole = userQueryRequest.getUserRole();
+        String sortOrder = userQueryRequest.getSortOrder();
+        String sortField = userQueryRequest.getSortField();
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        return wrapper.eq(ObjectUtil.isNotNull(id) && id > 0, "id", id)
+                .like(StrUtil.isNotBlank(userName), "username", userName)
+                .like(StrUtil.isNotBlank(userAccount), "user_account", userAccount)
+                .like(StrUtil.isNotBlank(userProfile), "user_profile", userProfile)
+                .eq(StrUtil.isNotBlank(userRole), "user_role", userRole)
+                .orderBy(StrUtil.isNotBlank(sortField), "ascend".equals(sortOrder), sortField);
     }
 
     /**
