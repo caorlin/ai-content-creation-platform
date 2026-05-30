@@ -3,6 +3,7 @@ package com.caoerlin.aicontentcreation.model.dto.user;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Data
@@ -14,4 +15,7 @@ public class UserRegisterRequest implements Serializable {
     private String userPassword;
     @Schema(description = "确认密码", example = "12345678")
     private String checkPassword;
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 }
