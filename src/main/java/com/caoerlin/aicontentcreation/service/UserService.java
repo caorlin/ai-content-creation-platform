@@ -1,9 +1,13 @@
 package com.caoerlin.aicontentcreation.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
+import com.caoerlin.aicontentcreation.model.vo.user.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.util.List;
 
 /**
  * @author zyj
@@ -54,4 +58,29 @@ public interface UserService extends IService<User> {
      * @return
      */
     Boolean userLogout(HttpServletRequest request);
+
+    /**
+     * 获取脱敏的用户信息
+     *
+     * @param user 未脱敏用户信息
+     * @return 脱敏的用户信息
+     */
+    UserVO getUserVO(User user);
+
+    /**
+     * 获取脱敏的用户信息列表
+     *
+     * @param userList 未脱敏的用户信息列表
+     * @return 脱敏的用户信息列表
+     */
+    List<UserVO> getUserVOList(List<User> userList);
+
+    /**
+     * 获取用户查询页
+     *
+     * @param pageNum 页号
+     * @param pageSize 页数
+     * @return
+     */
+    Page<User> getUserPage(long pageNum, long pageSize);
 }

@@ -30,4 +30,9 @@ public interface UserConstant {
      * 管理员角色
      */
     String ADMIN_ROLE = "admin";
+
+    /**
+     * 默认密码
+     */
+    String DEFAULT_PASSWORD = "12345678";
 }

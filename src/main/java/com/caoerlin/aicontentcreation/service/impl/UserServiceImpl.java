@@ -1,9 +1,11 @@
 package com.caoerlin.aicontentcreation.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoerlin.aicontentcreation.common.exception.BusinessException;
 import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
@@ -11,14 +13,17 @@ import com.caoerlin.aicontentcreation.constant.UserConstant;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
+import com.caoerlin.aicontentcreation.model.vo.user.UserVO;
 import com.caoerlin.aicontentcreation.service.UserService;
 import com.caoerlin.aicontentcreation.mapper.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.UUID;
 
 import static com.caoerlin.aicontentcreation.constant.UserConstant.USER_LOGIN_STATE;
@@ -29,8 +34,10 @@ import static com.caoerlin.aicontentcreation.constant.UserConstant.USER_LOGIN_ST
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
+    private final UserMapper userMapper;
 
     @Override
     public Long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -154,6 +161,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         log.info("用户：{},成功退出登录", user.getUserAccount());
         request.getSession().removeAttribute(USER_LOGIN_STATE);
         return true;
+    }
+
+    @Override
+    public UserVO getUserVO(User user) {
+        if (ObjectUtil.isNull(user)) {
+            return null;
+        }
+        UserVO userVO = new UserVO();
+        BeanUtil.copyProperties(user, userVO);
+        return userVO;
+    }
+
+    @Override
+    public List<UserVO> getUserVOList(List<User> userList) {
+        if (CollectionUtil.isEmpty(userList)) {
+            return List.of();
+        }
+        return userList.stream().map(this::getUserVO).toList();
+
+    }
+
+    @Override
+    public Page<User> getUserPage(long pageNum, long pageSize) {
+        Page<User> page = new Page<>(pageNum, pageSize);
+        return userMapper.selectPage(page,null);
     }
 
     /**
