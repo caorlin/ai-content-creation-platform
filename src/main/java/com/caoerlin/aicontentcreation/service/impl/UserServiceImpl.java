@@ -138,10 +138,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         //保证用户信息为最新状态
         User currentUser = getById(user.getId());
-        if (ObjectUtil.isNull(currentUser)){
+        if (ObjectUtil.isNull(currentUser)) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录,请登录后再操作");
         }
         return currentUser;
+    }
+
+    @Override
+    public Boolean userLogout(HttpServletRequest request) {
+        log.info("开始用户退出登录接口");
+        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (ObjectUtil.isNull(user)) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录,请登录后再操作");
+        }
+        log.info("用户：{},成功退出登录", user.getUserAccount());
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return true;
     }
 
     /**

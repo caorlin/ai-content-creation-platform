@@ -14,10 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户控制层
@@ -42,10 +39,18 @@ public class UserController {
     }
 
     @PostMapping("login")
+    @Operation(summary = "用户登录接口")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(ObjectUtil.isNull(userLoginRequest), ErrorCode.PARAMS_ERROR);
         String userAccount = userLoginRequest.getUserAccount();
         String userPassword = userLoginRequest.getUserPassword();
         return ResultUtils.success(userService.userLogin(userAccount, userPassword, request));
+    }
+
+
+    @PostMapping("logout")
+    @Operation(summary = "退出登录接口")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request){
+        return ResultUtils.success(userService.userLogout(request));
     }
 }
