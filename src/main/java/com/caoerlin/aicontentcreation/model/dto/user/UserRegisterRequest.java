@@ -10,8 +10,8 @@ import java.io.Serializable;
 public class UserRegisterRequest implements Serializable {
     @Schema(description = "用户名", example = "zhansan")
     private String userAccount;
-    @Schema(description = "密码", example = "123456")
+    @Schema(description = "密码", example = "12345678")
     private String userPassword;
-    @Schema(description = "确认密码", example = "123456")
+    @Schema(description = "确认密码", example = "12345678")
     private String checkPassword;
 }
