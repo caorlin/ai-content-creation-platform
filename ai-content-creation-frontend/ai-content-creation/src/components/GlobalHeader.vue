@@ -18,7 +18,7 @@ const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
   <a-layout-header class="global-header">
     <div class="header-left">
       <RouterLink class="brand" to="/">
-        <img class="logo" src="/logo.png" alt="logo" />
+        <img class="logo" src="@/assets/logo.png" alt="logo" />
         <span class="title">AI 内容创作平台</span>
       </RouterLink>
       <a-menu
