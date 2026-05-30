@@ -128,6 +128,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         return getLoginUserVO(user);
     }
 
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        //获取用户信息
+        User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (ObjectUtil.isNull(user) || ObjectUtil.isNull(user.getId())) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录,请登录后再操作");
+        }
+
+        //保证用户信息为最新状态
+        User currentUser = getById(user.getId());
+        if (ObjectUtil.isNull(currentUser)){
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录,请登录后再操作");
+        }
+        return currentUser;
+    }
+
     /**
      * 获取用户信息脱敏后信息
      *
