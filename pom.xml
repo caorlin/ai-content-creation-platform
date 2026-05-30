@@ -85,6 +85,12 @@
             <version>3.0.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-jsqlparser</artifactId>
+            <version>3.5.16</version> <!-- 务必和核心包版本一致 -->
+        </dependency>
+
         <!-- Source: https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
         <dependency>
             <groupId>com.zaxxer</groupId>
