@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ArticleImageGenerateAgent {
+public class ArticleImageRequirementsAgent {
     private final ChatModel articleContentModel;
 
     public void analyzeArticleIllustration(ArticleState state) {
