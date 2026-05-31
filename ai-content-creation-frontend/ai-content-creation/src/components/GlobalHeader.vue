@@ -3,6 +3,7 @@ import type { MenuProps } from 'ant-design-vue'
 import { headerMenuItems } from '@/config/menu'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useLoginUserStore } from '@/stores/loginUser.ts'
 
 const router = useRouter()
 const route = useRoute()
@@ -12,6 +13,8 @@ const selectedKeys = computed(() => [route.path])
 const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
   router.push(String(key))
 }
+// JS 中引入 Store
+const loginUserStore = useLoginUserStore()
 </script>
 
 <template>
@@ -29,7 +32,18 @@ const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
         @click="handleMenuClick"
       />
     </div>
-    <a-button type="primary">登录</a-button>
+
+    <div class="user-login-status">
+      <div v-if="loginUserStore.loginUser.id">
+        <a-space>
+          <a-avatar :src="loginUserStore.loginUser.userAvatar" />
+          {{ loginUserStore.loginUser.username ?? '无名' }}
+        </a-space>
+      </div>
+      <div v-else>
+        <a-button type="primary" href="/user/login">登录</a-button>
+      </div>
+    </div>
   </a-layout-header>
 </template>
 

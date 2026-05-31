@@ -46,6 +46,14 @@ export async function getUserById(
   })
 }
 
+/** 此处后端没有提供注释 GET /user/get/user */
+export async function getLoginUser(options?: { [key: string]: any }) {
+  return request<API.BaseResponseLoginUserVO>('/user/get/user', {
+    method: 'GET',
+    ...(options || {}),
+  })
+}
+
 /** 根据 id 获取包装类 GET /user/get/vo */
 export async function getUserVoById(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
