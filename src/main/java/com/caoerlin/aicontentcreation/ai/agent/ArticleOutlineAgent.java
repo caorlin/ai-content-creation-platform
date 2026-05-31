@@ -3,6 +3,7 @@ package com.caoerlin.aicontentcreation.ai.agent;
 import cn.hutool.core.util.ObjectUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
+import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
 import com.caoerlin.aicontentcreation.ai.utils.AiResponseParseUtils;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
@@ -38,36 +39,11 @@ public class ArticleOutlineAgent {
         String articleOutlinePrompt = PromptConstant.ARTICLE_OUTLINE_AGENT_PROMPT
                 .replace("{mainTitle}", title.getMainTitle())
                 .replace("{subTitle}", title.getSubTitle());
-        String content = callModelWithStreaming(articleOutlinePrompt, consumer, SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_STREAMING);
+        String content = AiModelCallingUtils.callModelWithStreaming(articleContentModel, articleOutlinePrompt, consumer, SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_STREAMING);
         //解析大纲
         ArticleState.OutlineResult outlineResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.OutlineResult.class, "文章大纲");
         articleState.setOutline(outlineResult);
 
-        log.info("智能体 ArticleOutlineAgent 生成文章大纲成功,sections={}",outlineResult.getSections());
-    }
-
-    private String callModelWithStreaming(String prompt, Consumer<String> consumer, SseMessageTypeEnum messageType) {
-        //大纲内容
-        StringBuilder outlineContent = new StringBuilder();
-
-        //调用模型流式输出大纲
-        Flux<ChatResponse> chatResponseFlux = articleContentModel.stream(new Prompt(new UserMessage(prompt)));
-
-        //处理流式数据
-        chatResponseFlux
-                .doOnNext(chatResponse -> {
-                    String chunk = chatResponse.getResult().getOutput().getText();
-                    if (chunk != null && !chunk.isEmpty()) {
-                        outlineContent.append(chunk);
-                        //用于前段流式输出打字机效果
-                        consumer.accept(messageType.getStreamingPrefix() + chunk);
-                    }
-                })
-                .doOnError(e -> {
-                    log.error("LLM 流式调用失败, messageType={},e={}", messageType, e.getMessage());
-                })
-                .blockLast();
-
-        return outlineContent.toString();
+        log.info("智能体 ArticleOutlineAgent 生成文章大纲成功,sections={}", outlineResult.getSections());
     }
 }
