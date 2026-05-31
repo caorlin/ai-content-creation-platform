@@ -138,7 +138,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public User getLoginUser(HttpServletRequest request) {
+    public LoginUserVO getLoginUser(HttpServletRequest request) {
         //获取用户信息
         User user = (User) request.getSession().getAttribute(USER_LOGIN_STATE);
         if (ObjectUtil.isNull(user) || ObjectUtil.isNull(user.getId())) {
@@ -150,7 +150,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         if (ObjectUtil.isNull(currentUser)) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR, "用户未登录,请登录后再操作");
         }
-        return currentUser;
+        //过滤用户敏感信息
+        LoginUserVO currentLoginUserVO = new LoginUserVO();
+        BeanUtil.copyProperties(currentUser,currentLoginUserVO);
+        return currentLoginUserVO;
     }
 
     @Override

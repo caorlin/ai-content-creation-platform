@@ -6,6 +6,7 @@ import com.caoerlin.aicontentcreation.common.exception.BusinessException;
 import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
+import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 import com.caoerlin.aicontentcreation.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class AuthInterceptor {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         //获取当前登录对象信息
-        User user = userService.getLoginUser(request);
+        LoginUserVO user = userService.getLoginUser(request);
         //根据注解填入角色获取对应的角色enum
         UserRoleEnum mustRoleEnum = UserRoleEnum.getEnumByValue(mustRole);
         if (ObjectUtil.isNull(mustRoleEnum)) {
