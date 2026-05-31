@@ -6,6 +6,7 @@ import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -53,7 +54,7 @@ public class ArcticTitleAgent {
         if (StrUtil.isBlank(prompt)) {
             return "";
         }
-        ChatResponse chatResponse = articleTitleChatModel.call(new Prompt(prompt));
+        ChatResponse chatResponse = articleTitleChatModel.call(new Prompt(new UserMessage(prompt)));
         return chatResponse.getResult().getOutput().getText();
     }
 }
