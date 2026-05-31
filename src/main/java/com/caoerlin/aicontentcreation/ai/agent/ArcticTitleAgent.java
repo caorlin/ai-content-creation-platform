@@ -3,6 +3,7 @@ package com.caoerlin.aicontentcreation.ai.agent;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
+import com.caoerlin.aicontentcreation.ai.utils.AiResponseParseUtils;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,18 +37,11 @@ public class ArcticTitleAgent {
         //调用模型生成文章标题
         String content = callModel(articleTitlePrompt);
 
-        ArticleState.TitleResult titleResult = parseArticleTitle(content);
+        ArticleState.TitleResult titleResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.TitleResult.class, "文章标题");
         //设置文章标题
         state.setTitle(titleResult);
 
         log.info("智能体 ArcticTitleAgent 生成文章标题成功,mainTitle={}", titleResult.getMainTitle());
-    }
-
-    private ArticleState.TitleResult parseArticleTitle(String content) {
-        if (StrUtil.isBlank(content)) {
-            return null;
-        }
-        return JSONUtil.toBean(content, ArticleState.TitleResult.class);
     }
 
     private String callModel(String prompt) {
