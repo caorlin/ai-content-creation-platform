@@ -2,6 +2,7 @@ package com.caoerlin.aicontentcreation.ai.agent;
 
 import cn.hutool.core.util.StrUtil;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
+import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
 import com.caoerlin.aicontentcreation.ai.utils.AiResponseParseUtils;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
@@ -34,20 +35,12 @@ public class ArcticTitleAgent {
         //将用户选题加入prompt
         String articleTitlePrompt = PromptConstant.ARTICLE_TITLE_AGENT_PROMPT.replace("{topic}", topic);
         //调用模型生成文章标题
-        String content = callModel(articleTitlePrompt);
+        String content = AiModelCallingUtils.callModel(articleTitleChatModel, articleTitlePrompt);
 
         ArticleState.TitleResult titleResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.TitleResult.class, "文章标题");
         //设置文章标题
         state.setTitle(titleResult);
 
         log.info("智能体 ArcticTitleAgent 生成文章标题成功,mainTitle={}", titleResult.getMainTitle());
-    }
-
-    private String callModel(String prompt) {
-        if (StrUtil.isBlank(prompt)) {
-            return "";
-        }
-        ChatResponse chatResponse = articleTitleChatModel.call(new Prompt(new UserMessage(prompt)));
-        return chatResponse.getResult().getOutput().getText();
     }
 }

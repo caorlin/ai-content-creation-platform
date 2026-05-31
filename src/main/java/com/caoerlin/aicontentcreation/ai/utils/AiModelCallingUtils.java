@@ -1,5 +1,6 @@
 package com.caoerlin.aicontentcreation.ai.utils;
 
+import cn.hutool.core.util.StrUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -12,6 +13,14 @@ import java.util.function.Consumer;
 
 @Slf4j
 public class AiModelCallingUtils {
+
+    public static String callModel(ChatModel chatModel, String prompt) {
+        if (StrUtil.isBlank(prompt)) {
+            return "";
+        }
+        ChatResponse chatResponse = chatModel.call(new Prompt(new UserMessage(prompt)));
+        return chatResponse.getResult().getOutput().getText();
+    }
 
     public static String callModelWithStreaming(ChatModel chatModel, String prompt, Consumer<String> consumer, SseMessageTypeEnum messageType) {
         //大纲内容
