@@ -33,7 +33,7 @@ public enum SseMessageTypeEnum {
     /**
      * 智能体4完成（分析配图需求）
      */
-    ARTICLE_ILLUSTRATION_ANALYSIS_AGENT_COMPLETE("ILLUSTRATION_ANALYSIS_AGENT_COMPLETE", "配图需求分析完成"),
+    ARTICLE_IMAGE_REQUIREMENTS_AGENT_COMPLETE("ARTICLE_IMAGE_REQUIREMENTS_AGENT_COMPLETE", "配图需求分析完成"),
 
     /**
      * 单张配图完成
