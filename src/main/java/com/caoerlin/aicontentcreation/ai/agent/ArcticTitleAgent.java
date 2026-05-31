@@ -32,7 +32,7 @@ public class ArcticTitleAgent {
         //文章选题
         String topic = state.getTopic();
         //将用户选题加入prompt
-        String articleTitlePrompt = PromptConstant.AGENT1_TITLE_PROMPT.replace("{topic}", topic);
+        String articleTitlePrompt = PromptConstant.ARTICLE_TITLE_AGENT_PROMPT.replace("{topic}", topic);
         //调用模型生成文章标题
         String content = callModel(articleTitlePrompt);
 

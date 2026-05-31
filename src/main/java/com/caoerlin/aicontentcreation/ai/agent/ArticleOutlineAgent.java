@@ -35,7 +35,7 @@ public class ArticleOutlineAgent {
         //获取文章标题
         ArticleState.TitleResult title = articleState.getTitle();
         //生成文章大纲prompt
-        String articleOutlinePrompt = PromptConstant.AGENT2_OUTLINE_PROMPT
+        String articleOutlinePrompt = PromptConstant.ARTICLE_OUTLINE_AGENT_PROMPT
                 .replace("{mainTitle}", title.getMainTitle())
                 .replace("{subTitle}", title.getSubTitle());
         String content = callModelWithStreaming(articleOutlinePrompt, consumer, SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_STREAMING);

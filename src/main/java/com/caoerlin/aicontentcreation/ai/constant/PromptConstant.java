@@ -8,7 +8,7 @@ public interface PromptConstant {
     /**
      * 智能体1：生成标题
      */
-    String AGENT1_TITLE_PROMPT = """
+    String ARTICLE_TITLE_AGENT_PROMPT = """
             你是一位爆款文章标题专家,擅长创作吸引人的标题。
             
             根据以下选题,生成一个爆款文章标题(主标题 + 副标题):
@@ -29,7 +29,7 @@ public interface PromptConstant {
     /**
      * 智能体2：生成大纲
      */
-    String AGENT2_OUTLINE_PROMPT = """
+    String ARTICLE_OUTLINE_AGENT_PROMPT = """
         你是一位专业的文章策划师,擅长设计文章结构。
         
         根据以下标题,生成文章大纲:
@@ -57,7 +57,7 @@ public interface PromptConstant {
     /**
      * 智能体3：生成正文
      */
-    String AGENT3_CONTENT_PROMPT = """
+    String ARTICLE_CONTENT_AGENT_PROMPT = """
         你是一位资深的内容创作者,擅长撰写优质文章。
         
         根据以下大纲,创作文章正文:
@@ -79,7 +79,7 @@ public interface PromptConstant {
     /**
      * 智能体4：分析配图需求
      */
-    String AGENT4_IMAGE_REQUIREMENTS_PROMPT = """
+    String ARTICLE_IMAGE_REQUIREMENTS_AGENT_PROMPT = """
         你是一位专业的新媒体编辑,擅长为文章配图。
         
         根据以下文章内容,分析配图需求:
