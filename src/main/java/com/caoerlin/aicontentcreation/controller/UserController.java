@@ -78,6 +78,11 @@ public class UserController {
         return ResultUtils.success(user.getId());
     }
 
+    @GetMapping("get/user")
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+        return ResultUtils.success(userService.getLoginUser(request));
+    }
+
     /**
      * 根据 id 获取用户（仅管理员）
      */
