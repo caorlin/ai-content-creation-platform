@@ -18,6 +18,9 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public abstract class ArticleCreationAgent implements BaseArticleCreationAgent {
     private final ArcticTitleAgent arcticTitleAgent;
+    private final ArticleOutlineAgent articleOutlineAgent;
+    private final ArticleContentAgent articleContentAgent;
+    private final ArticleImageRequirementsAgent articleImageRequirementsAgent;
 
     /**
      * 生成文章
@@ -38,22 +41,22 @@ public abstract class ArticleCreationAgent implements BaseArticleCreationAgent {
 
         //生成文章标题完成，开始生成文章大纲(流式输出)
         log.info("调用 ArticleOutlineAgent：开始生成文章大纲,taskId:{}", state.getTaskId());
-        generateArticleOutline(state, streamHandler);
+        articleOutlineAgent.generateArticleOutline(state, streamHandler);
         streamHandler.accept(SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_AGENT_COMPLETE.getValue());
 
         log.info("文章大纲生成完毕,开始调用 ArticleContentAgent 生成文章内容");
 
         //文章大纲生成完毕，开始生成文章内容(流式输出)
         log.info("调用 ArticleContentAgent：开始生成文章内容,taskId:{}", state.getTaskId());
-        generateArticleContent(state, streamHandler);
+        articleContentAgent.generateArticleContent(state, streamHandler);
         streamHandler.accept(SseMessageTypeEnum.ARTICLE_CONTENT_AGENT_COMPLETE.getValue());
 
-        log.info("文章内容生成完毕,开始调用  ArticleIllustrationAnalysisAgent 分析文章需要的配图");
+        log.info("文章内容生成完毕,开始调用  ArticleImageRequirementsAgent 分析文章需要的配图");
 
         //开始分析文章所须配图
-        log.info("调用 ArticleIllustrationAnalysisAgent：开始分析文章配图,taskId:{}", state.getTaskId());
-        analyzeArticleIllustration(state);
-        streamHandler.accept(SseMessageTypeEnum.ARTICLE_ILLUSTRATION_ANALYSIS_AGENT_COMPLETE.getValue());
+        log.info("调用 ArticleImageRequirementsAgent：开始分析文章配图,taskId:{}", state.getTaskId());
+        articleImageRequirementsAgent.analyzeArticleIllustration(state);
+        streamHandler.accept(SseMessageTypeEnum.ARTICLE_IMAGE_REQUIREMENTS_AGENT_COMPLETE.getValue());
 
         log.info("分析文章配图完毕,开始调用  ArticleImageGenerateAgent 生成配图");
 
@@ -73,12 +76,6 @@ public abstract class ArticleCreationAgent implements BaseArticleCreationAgent {
     /**
      * todo 先用抽象方法，等后续真实现
      */
-    protected abstract void generateArticleOutline(ArticleState articleState, Consumer<String> consumer);
-
-    protected abstract void generateArticleContent(ArticleState state, Consumer<String> streamHandler);
-
-    protected abstract void analyzeArticleIllustration(ArticleState state);
-
     protected abstract void generateArticleImage(ArticleState state, Consumer<String> streamHandler);
 
     protected abstract void mergeArticleAndImage(ArticleState state);
