@@ -4,7 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
-import com.caoerlin.aicontentcreation.ai.utils.AiModelCallUtils;
+import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class ArticleContentAgent {
                 .replace("{outline}", outlineJsonStr);
 
         //根据prompt生成文章内容
-        String content = AiModelCallUtils.callModelWithStreaming(articleContentModel, prompt, streamHandler, SseMessageTypeEnum.ARTICLE_CONTENT_AGENT_STREAMING);
+        String content = AiModelCallingUtils.callModelWithStreaming(articleContentModel, prompt, streamHandler, SseMessageTypeEnum.ARTICLE_CONTENT_AGENT_STREAMING);
 
         state.setContent(content);
 
