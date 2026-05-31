@@ -25,7 +25,7 @@ public class ArticleTitleModelConfig {
                 .apiKey(apiKey)
                 .build();
         DashScopeChatOptions chatOptions = DashScopeChatOptions.builder()
-                .model("qwen-turbo")
+                .model(model)
                 .maxToken(maxTokens)
                 .build();
         return DashScopeChatModel.builder().dashScopeApi(dashScopeApi)
