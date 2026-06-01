@@ -2,6 +2,17 @@ package com.caoerlin.aicontentcreation.constant;
 
 public interface ArticleConstant {
     /**
+     * sse超时时间(ms)  30分钟
+     */
+    Long SSE_TIME_OUT = 30 * 60 * 1000L;
+
+    /**
+     * ss重连时间(ms)
+     */
+    Long SSE_RECONNECT_TIME = 3000L;
+
+
+    /**
      * Pexels API 地址
      */
     String PEXELS_API_URL = "https://api.pexels.com/v1/search";
