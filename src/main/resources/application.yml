@@ -25,6 +25,19 @@ spring:
       port: 6379
       database: 0
       password:
+  ai:
+    dashscope:
+      api-key: ${dashscope.api-key}
+    article-title-agent-model:
+      api-key: ${dashscope.api-key}
+      model: qwen-turbo
+      max-tokens: 8124
+    article-content-agent-model:
+      api-key: ${dashscope.api-key}
+      model: qwen-max
+
+pexels:
+  api-key: ${pexels.api-key}
 
 # springdoc-openapi 配置
 springdoc:
