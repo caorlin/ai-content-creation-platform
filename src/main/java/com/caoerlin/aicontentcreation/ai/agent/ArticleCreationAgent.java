@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public abstract class ArticleCreationAgent implements BaseArticleCreationAgent {
+public class ArticleCreationAgent implements BaseArticleCreationAgent {
     private final ArcticTitleAgent arcticTitleAgent;
     private final ArticleOutlineAgent articleOutlineAgent;
     private final ArticleContentAgent articleContentAgent;
