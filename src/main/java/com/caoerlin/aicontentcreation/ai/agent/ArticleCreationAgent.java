@@ -23,6 +23,8 @@ public abstract class ArticleCreationAgent implements BaseArticleCreationAgent {
     private final ArticleOutlineAgent articleOutlineAgent;
     private final ArticleContentAgent articleContentAgent;
     private final ArticleImageRequirementsAgent articleImageRequirementsAgent;
+    private final ArticleImageGenerateAgent articleImageGenerateAgent;
+    private final ArticleMergeAgent articleMergeAgent;
 
     /**
      * 生成文章
@@ -65,25 +67,18 @@ public abstract class ArticleCreationAgent implements BaseArticleCreationAgent {
 
             //开始生成文章配图
             log.info("调用 ArticleImageGenerateAgent：开始生成配图,taskId:{}", state.getTaskId());
-            generateArticleImage(state, streamHandler);
+            articleImageGenerateAgent.generateArticleImage(state, streamHandler);
             streamHandler.accept(SseMessageTypeEnum.ARTICLE_IMAGE_GENERATE_AGENT_COMPLETE.getValue());
 
             log.info("文章配图生成完毕,开始调用  ArticleMergeAgent 合并图文");
 
             //开始合并图文
             log.info("调用 ArticleMergeAgent ：开始合并图文,taskId:{}", state.getTaskId());
-            mergeArticleAndImage(state);
+            articleMergeAgent.mergeArticleAndImage(state);
             streamHandler.accept(SseMessageTypeEnum.MERGE_COMPLETE.getValue());
         } catch (Exception e) {
             log.error("生成文章失败:taskId={},e={}", state.getTaskId(), e.getMessage());
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "生成文章失败");
         }
     }
-
-    /**
-     * todo 先用抽象方法，等后续真实现
-     */
-    protected abstract void generateArticleImage(ArticleState state, Consumer<String> streamHandler);
-
-    protected abstract void mergeArticleAndImage(ArticleState state);
 }
