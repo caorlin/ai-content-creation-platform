@@ -39,6 +39,16 @@ spring:
 pexels:
   api-key: ${pexels.api-key}
 
+# 添加 COS 对象存储配置（需要从腾讯云获取）
+cos:
+  client:
+    host: ${cos.host}
+    secretId: ${cos.secretId}
+    secretKey: ${cos.secretKey}
+    region: ${cos.region}
+    bucket: ${cos.bucket}
+
+
 # springdoc-openapi 配置
 springdoc:
   group-configs:
