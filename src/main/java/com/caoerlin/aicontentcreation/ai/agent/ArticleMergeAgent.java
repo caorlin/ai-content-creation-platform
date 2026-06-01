@@ -54,7 +54,7 @@ public class ArticleMergeAgent {
             if (image.getPosition() > 1 &&
                     StrUtil.isNotBlank(image.getSectionTitle()) &&
                     sectionTitle.contains(image.getSectionTitle().trim())) {
-                fullContent.append("\n[").append(image.getDescription())
+                fullContent.append("\n![").append(image.getDescription())
                         .append("](").append(image.getUrl()).append(")\n");
             }
         }
