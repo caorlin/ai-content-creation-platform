@@ -56,6 +56,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         Article article = new Article();
         article.setTaskId(taskId);
         article.setUserId(loginUser.getId());
+        article.setTopic(topic);
 
         log.info("创建文章任务接口,创建文章开始保存文章任务,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
         boolean result = save(article);
