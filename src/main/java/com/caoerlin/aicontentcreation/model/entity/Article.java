@@ -4,14 +4,22 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
+import lombok.Data;
+
+import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
  * 文章表
+ *
  * @TableName article
  */
-@TableName(value ="article")
+@Data
+@Builder
+@TableName(value = "article")
 public class Article implements Serializable {
     /**
      * id
@@ -47,7 +55,7 @@ public class Article implements Serializable {
     /**
      * 大纲（JSON格式）
      */
-    private Object outline;
+    private String outline;
 
     /**
      * 正文（Markdown格式）
@@ -67,7 +75,7 @@ public class Article implements Serializable {
     /**
      * 配图列表（JSON数组）
      */
-    private Object images;
+    private String images;
 
     /**
      * 状态：PENDING/PROCESSING/COMPLETED/FAILED
@@ -82,261 +90,24 @@ public class Article implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 完成时间
      */
-    private Date completedTime;
+    private LocalDateTime completedTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除
      */
     private Integer isDelete;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
-
-    /**
-     * id
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * id
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * 任务ID（UUID）
-     */
-    public String getTaskId() {
-        return taskId;
-    }
-
-    /**
-     * 任务ID（UUID）
-     */
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    /**
-     * 用户ID
-     */
-    public Long getUserId() {
-        return userId;
-    }
-
-    /**
-     * 用户ID
-     */
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * 选题
-     */
-    public String getTopic() {
-        return topic;
-    }
-
-    /**
-     * 选题
-     */
-    public void setTopic(String topic) {
-        this.topic = topic;
-    }
-
-    /**
-     * 主标题
-     */
-    public String getMainTitle() {
-        return mainTitle;
-    }
-
-    /**
-     * 主标题
-     */
-    public void setMainTitle(String mainTitle) {
-        this.mainTitle = mainTitle;
-    }
-
-    /**
-     * 副标题
-     */
-    public String getSubTitle() {
-        return subTitle;
-    }
-
-    /**
-     * 副标题
-     */
-    public void setSubTitle(String subTitle) {
-        this.subTitle = subTitle;
-    }
-
-    /**
-     * 大纲（JSON格式）
-     */
-    public Object getOutline() {
-        return outline;
-    }
-
-    /**
-     * 大纲（JSON格式）
-     */
-    public void setOutline(Object outline) {
-        this.outline = outline;
-    }
-
-    /**
-     * 正文（Markdown格式）
-     */
-    public String getContent() {
-        return content;
-    }
-
-    /**
-     * 正文（Markdown格式）
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    /**
-     * 完整图文（Markdown格式，含配图）
-     */
-    public String getFullContent() {
-        return fullContent;
-    }
-
-    /**
-     * 完整图文（Markdown格式，含配图）
-     */
-    public void setFullContent(String fullContent) {
-        this.fullContent = fullContent;
-    }
-
-    /**
-     * 封面图 URL
-     */
-    public String getCoverImage() {
-        return coverImage;
-    }
-
-    /**
-     * 封面图 URL
-     */
-    public void setCoverImage(String coverImage) {
-        this.coverImage = coverImage;
-    }
-
-    /**
-     * 配图列表（JSON数组）
-     */
-    public Object getImages() {
-        return images;
-    }
-
-    /**
-     * 配图列表（JSON数组）
-     */
-    public void setImages(Object images) {
-        this.images = images;
-    }
-
-    /**
-     * 状态：PENDING/PROCESSING/COMPLETED/FAILED
-     */
-    public String getStatus() {
-        return status;
-    }
-
-    /**
-     * 状态：PENDING/PROCESSING/COMPLETED/FAILED
-     */
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    /**
-     * 错误信息
-     */
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    /**
-     * 错误信息
-     */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    /**
-     * 创建时间
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * 完成时间
-     */
-    public Date getCompletedTime() {
-        return completedTime;
-    }
-
-    /**
-     * 完成时间
-     */
-    public void setCompletedTime(Date completedTime) {
-        this.completedTime = completedTime;
-    }
-
-    /**
-     * 更新时间
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    /**
-     * 更新时间
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    /**
-     * 是否删除
-     */
-    public Integer getIsDelete() {
-        return isDelete;
-    }
-
-    /**
-     * 是否删除
-     */
-    public void setIsDelete(Integer isDelete) {
-        this.isDelete = isDelete;
-    }
 }

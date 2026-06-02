@@ -1,4 +1,8 @@
-package com.caoerlin.aicontentcreation.model.entity;
+package com.caoerlin.aicontentcreation.model.enums;
+
+/**
+ * @author zyj
+ */
 
 public enum DataType {
     /**

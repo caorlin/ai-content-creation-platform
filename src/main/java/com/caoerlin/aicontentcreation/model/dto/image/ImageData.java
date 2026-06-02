@@ -1,6 +1,6 @@
 package com.caoerlin.aicontentcreation.model.dto.image;
 
-import com.caoerlin.aicontentcreation.model.entity.DataType;
+import com.caoerlin.aicontentcreation.model.enums.DataType;
 import lombok.Builder;
 import lombok.Data;
 
