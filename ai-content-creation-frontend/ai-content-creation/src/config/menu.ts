@@ -7,8 +7,8 @@ export const headerMenuItems: MenuProps['items'] = [
     title: '首页',
   },
   {
-    key: '/about',
-    label: '关于',
-    title: '关于',
+    key: '/user/userManage',
+    label: '用户管理',
+    title: '用户管理',
   },
 ]

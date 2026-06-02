@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { type MenuProps, message } from 'ant-design-vue'
-import { headerMenuItems } from '@/config/menu'
-import { computed } from 'vue'
+import { computed, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { LogoutOutlined } from '@ant-design/icons-vue'
+import { HomeTwoTone, LogoutOutlined } from '@ant-design/icons-vue'
 import { userLogout } from '@/api/userController.ts'
 
 const router = useRouter()
@@ -31,6 +30,41 @@ const doLogout = async () => {
     message.error('退出登录失败，' + res.data.message)
   }
 }
+// 菜单配置项
+const originItems = [
+  {
+    key: '/',
+    icon: () => h(HomeTwoTone),
+    label: '主页',
+    title: '主页',
+  },
+  {
+    key: '/admin/userManage',
+    label: '用户管理',
+    title: '用户管理',
+  },
+  {
+    key: 'others',
+    title: '编程导航',
+  },
+]
+
+// 过滤菜单项
+const filterMenus = (menus = [] as MenuProps['items']) => {
+  return menus?.filter((menu) => {
+    const menuKey = menu?.key as string
+    if (menuKey?.startsWith('/admin')) {
+      const loginUser = loginUserStore.loginUser
+      if (!loginUser || loginUser.userRole !== 'admin') {
+        return false
+      }
+    }
+    return true
+  })
+}
+
+// 展示在菜单的路由数组
+const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
 </script>
 
 <template>
@@ -43,7 +77,7 @@ const doLogout = async () => {
       <a-menu
         class="header-menu"
         mode="horizontal"
-        :items="headerMenuItems"
+        :items="menuItems"
         :selected-keys="selectedKeys"
         @click="handleMenuClick"
       />
