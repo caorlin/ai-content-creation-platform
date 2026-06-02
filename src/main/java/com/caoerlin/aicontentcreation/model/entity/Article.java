@@ -15,10 +15,10 @@ import java.util.Date;
 /**
  * 文章表
  *
+ * @author Administrator
  * @TableName article
  */
 @Data
-@Builder
 @TableName(value = "article")
 public class Article implements Serializable {
     /**
