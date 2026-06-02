@@ -32,12 +32,8 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
     private final ArticleCreationAgent articleCreationAgent;
     private final SseEmitterManager sseEmitterManager;
 
-    /**
-     * 异步文章生成
-     *
-     * @param taskId 任务Id
-     * @param topic  选题
-     */
+
+    @Override
     @Async("articleExecutor")
     public void executeArticleGeneration(String taskId, String topic) {
         log.info("开始异步生成文章,taskId={},topic={}", taskId, topic);
