@@ -3,6 +3,45 @@ declare namespace API {
     userAddRequest: UserAddRequest
   }
 
+  type ArticleCreateRequest = {
+    /** 文章选题 */
+    topic?: string
+  }
+
+  type ArticleQueryRequest = {
+    pageNum?: number
+    pageSize?: number
+    sortField?: string
+    sortOrder?: string
+    userId?: number
+    status?: string
+  }
+
+  type ArticleVO = {
+    id?: number
+    taskId?: string
+    userId?: number
+    topic?: string
+    userDescription?: string
+    mainTitle?: string
+    subTitle?: string
+    content?: string
+    fullContent?: string
+    coverImage?: string
+    images?: []
+    status?: string
+    phase?: string
+    errorMessage?: string
+    createTime?: string
+    completedTime?: string
+  }
+
+  type BaseResponseArticleVO = {
+    code?: number
+    data?: ArticleVO
+    message?: string
+  }
+
   type BaseResponseBoolean = {
     code?: number
     data?: boolean
@@ -18,6 +57,12 @@ declare namespace API {
   type BaseResponseLong = {
     code?: number
     data?: number
+    message?: string
+  }
+
+  type BaseResponsePageArticleVO = {
+    code?: number
+    data?: PageArticleVO
     message?: string
   }
 
@@ -47,6 +92,14 @@ declare namespace API {
 
   type DeleteRequest = {
     id?: number
+  }
+
+  type getArticleParams = {
+    taskId: string
+  }
+
+  type getProgressParams = {
+    taskId: string
   }
 
   type getUserByIdParams = {
@@ -81,6 +134,20 @@ declare namespace API {
     asc?: boolean
   }
 
+  type PageArticleVO = {
+    records?: ArticleVO[]
+    total?: number
+    size?: number
+    current?: number
+    orders?: OrderItem[]
+    optimizeCountSql?: PageArticleVO
+    searchCount?: PageArticleVO
+    optimizeJoinOfCountSql?: boolean
+    maxLimit?: number
+    countId?: string
+    pages?: number
+  }
+
   type PageUserVO = {
     records?: UserVO[]
     total?: number
@@ -93,6 +160,10 @@ declare namespace API {
     maxLimit?: number
     countId?: string
     pages?: number
+  }
+
+  type SseEmitter = {
+    timeout?: number
   }
 
   type User = {

@@ -12,15 +12,20 @@ let firstFetchLoginUser = true
 router.beforeEach(async (to, from, next) => {
   const loginUserStore = useLoginUserStore()
   let loginUser = loginUserStore.loginUser
+  const toUrl = to.fullPath
+
+  if (toUrl.startsWith('/user/login') || toUrl.startsWith('/user/register')) {
+    next()
+    return
+  }
 
   // 首次加载时，等后端返回用户信息后再校验权限
-  if (firstFetchLoginUser) {
+  if (firstFetchLoginUser && toUrl.startsWith('/admin')) {
     await loginUserStore.fetchLoginUser()
     loginUser = loginUserStore.loginUser
     firstFetchLoginUser = false
   }
 
-  const toUrl = to.fullPath
   // 管理员页面权限校验
   if (toUrl.startsWith('/admin')) {
     if (!loginUser || loginUser.userRole !== USER_ROLE_ADMIN) {
