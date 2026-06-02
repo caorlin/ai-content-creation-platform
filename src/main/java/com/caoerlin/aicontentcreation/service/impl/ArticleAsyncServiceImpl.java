@@ -82,6 +82,13 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
         }
     }
 
+    /**
+     * 发送SSE消息
+     *
+     * @param taskId            任务id
+     * @param type              发送类型
+     * @param additionalDataMap 附加消息
+     */
     private void sendSseMessage(String taskId, SseMessageTypeEnum type, Map<String, String> additionalDataMap) {
         Map<String, Object> data = new HashMap<>();
         data.put("type", type.getValue());
@@ -89,6 +96,13 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
         sseEmitterManager.send(taskId, JSONUtil.toJsonStr(data));
     }
 
+    /**
+     * agent控制实时消息发送
+     *
+     * @param taskId  任务id
+     * @param message 消息
+     * @param state   当前文章状态
+     */
     private void handleAgentMessage(String taskId, String message, ArticleState state) {
         Map<String, Object> data = buildMessageData(message, state);
         if (CollectionUtil.isNotEmpty(data)) {
@@ -97,6 +111,13 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
         }
     }
 
+    /**
+     * 构建消息数据
+     *
+     * @param message 消息
+     * @param state   当前文章状态
+     * @return
+     */
     private Map<String, Object> buildMessageData(String message, ArticleState state) {
         //文章大纲流式消息前缀
         String articleOutlineStreamingPrefix = SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_STREAMING.getStreamingPrefix();
@@ -128,6 +149,13 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
     }
 
 
+    /**
+     * 任务完成后发送的消息数据
+     *
+     * @param message agent执行完成后消息
+     * @param state   当前文章状态消息
+     * @return
+     */
     private Map<String, Object> buildCompleteMessage(String message, ArticleState state) {
         Map<String, Object> data = new HashMap<>();
 
@@ -171,6 +199,12 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
     }
 
 
+    /**
+     * 图片检索完成信息
+     *
+     * @param imageJsonStr 图片集合
+     * @return
+     */
     private Map<String, Object> buildImageCompleteData(String imageJsonStr) {
         Map<String, Object> data = new HashMap<>();
         data.put("type", SseMessageTypeEnum.IMAGE_COMPLETE.getValue());
@@ -178,6 +212,13 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
         return data;
     }
 
+    /**
+     * 流水信息数据
+     *
+     * @param type    消息类型
+     * @param content 消息内容
+     * @return
+     */
     private Map<String, Object> buildStreamingData(SseMessageTypeEnum type, String content) {
         Map<String, Object> data = new HashMap<>();
         data.put("type", type);
