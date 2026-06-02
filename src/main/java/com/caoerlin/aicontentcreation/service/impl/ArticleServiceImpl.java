@@ -142,7 +142,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         if (!result) {
             log.error("保存文章信息失败,获取SQL执行结果错误,taskId={}", taskId);
         }
-        log.info("保存文章信息失败,taskId={}", taskId);
+        log.info("保存文章信息成功,taskId={}", taskId);
     }
 
     @Override
@@ -156,10 +156,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         //判断用户是否有权限操作
         Long userId = loginUser.getId();
         if (!ObjectUtil.equal(userId, article.getUserId())) {
-            log.error("用户：{},无权限操作,articleId={}", loginUser.getUserAccount(), article.getId());
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章不存在");
+            log.error("用户：{},无权限查看文章,articleId={}", loginUser.getUserAccount(), article.getId());
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "无权限查看");
         }
-        return null;
+
+        //
+        ArticleVO articleVO = new ArticleVO();
+        BeanUtil.copyProperties(article, articleVO);
+        return articleVO;
     }
 
     @Override
