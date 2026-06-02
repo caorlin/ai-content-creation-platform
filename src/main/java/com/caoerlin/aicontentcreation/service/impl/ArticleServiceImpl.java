@@ -1,5 +1,6 @@
 package com.caoerlin.aicontentcreation.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -16,6 +17,10 @@ import com.caoerlin.aicontentcreation.service.ArticleService;
 import com.caoerlin.aicontentcreation.mapper.ArticleMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author zyj
@@ -45,7 +50,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         log.info("创建文章任务接口,创建文章开始保存文章任务,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
         boolean result = save(article);
         if (!result) {
-            log.error("创建文章任务接口,创建文章任务失败,userAccount={}", loginUser.getUserAccount());
+            log.error("创建文章任务接口,创建文章任务失败,获取SQL执行结果错误,userAccount={}", loginUser.getUserAccount());
         }
 
         log.info("创建文章任务接口,创建文章任务完成,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
@@ -77,7 +82,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             article.setErrorMessage(errorMessage);
         }
         //更新文章状态
-        updateById(article);
+        boolean result = updateById(article);
+        if (!result) {
+            log.error("更新文章状态失败,获取SQL执行结果错误,taskId={}", taskId);
+        }
+        log.info("更新文章状态成功,taskId={}", taskId);
     }
 
     @Override
@@ -96,8 +105,34 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         }
         //保存文章内容
         String content = state.getContent();
+        article.setMainTitle(state.getTitle().getMainTitle());
+        article.setSubTitle(state.getTitle().getSubTitle());
+        article.setOutline(JSONUtil.toJsonStr(state.getOutline().getSections()));
         article.setContent(content);
-        updateById(article);
+        article.setFullContent(state.getFullContent());
+
+        //提前文章封面
+        List<ArticleState.ImageResult> images = state.getImages();
+        if (CollectionUtil.isNotEmpty(images)) {
+            //position=1 为封面图
+            ArticleState.ImageResult cover = images.stream()
+                    .filter(img ->
+                            ObjectUtil.isNotNull(img) && img.getPosition() == 1
+                    )
+                    .findFirst()
+                    .orElse(null);
+            if (ObjectUtil.isNotNull(cover)) {
+                article.setCoverImage(cover.getUrl());
+            }
+        }
+        article.setImages(JSONUtil.toJsonStr(images));
+        article.setCompletedTime(new Date());
+
+        boolean result = updateById(article);
+        if (!result) {
+            log.error("保存文章信息失败,获取SQL执行结果错误,taskId={}", taskId);
+        }
+        log.info("保存文章信息失败,taskId={}", taskId);
     }
 
     private Article getArticleByTaskId(String taskId) {
