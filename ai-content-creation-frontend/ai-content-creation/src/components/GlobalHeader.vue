@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { type MenuProps, message } from 'ant-design-vue'
-import { computed, h } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { HomeTwoTone, LogoutOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined } from '@ant-design/icons-vue'
 import { userLogout } from '@/api/userController.ts'
+import { headerMenuItems } from '@/config/menu.ts'
 
 const router = useRouter()
 const route = useRoute()
@@ -31,23 +32,7 @@ const doLogout = async () => {
   }
 }
 // 菜单配置项
-const originItems = [
-  {
-    key: '/',
-    icon: () => h(HomeTwoTone),
-    label: '主页',
-    title: '主页',
-  },
-  {
-    key: '/admin/userManage',
-    label: '用户管理',
-    title: '用户管理',
-  },
-  {
-    key: 'others',
-    title: '编程导航',
-  },
-]
+const originItems = headerMenuItems
 
 // 过滤菜单项
 const filterMenus = (menus = [] as MenuProps['items']) => {
@@ -69,19 +54,17 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
 
 <template>
   <a-layout-header class="global-header">
-    <div class="header-left">
-      <RouterLink class="brand" to="/">
-        <img class="logo" src="@/assets/logo.png" alt="logo" />
-        <span class="title">AI 内容创作平台</span>
-      </RouterLink>
-      <a-menu
-        class="header-menu"
-        mode="horizontal"
-        :items="menuItems"
-        :selected-keys="selectedKeys"
-        @click="handleMenuClick"
-      />
-    </div>
+    <RouterLink class="brand" to="/">
+      <img class="logo" src="@/assets/logo.png" alt="logo" />
+      <span class="title">AI 内容创作平台</span>
+    </RouterLink>
+    <a-menu
+      class="header-menu"
+      mode="horizontal"
+      :items="menuItems"
+      :selected-keys="selectedKeys"
+      @click="handleMenuClick"
+    />
 
     <div class="user-login-status">
       <div v-if="loginUserStore.loginUser.id">
@@ -114,25 +97,16 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
   z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 64px;
   padding: 0 24px;
   background: #ffffff;
   box-shadow: 0 1px 8px rgb(0 0 0 / 6%);
 }
 
-.header-left {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  min-width: 0;
-}
-
 .brand {
   display: inline-flex;
-  flex-shrink: 0;
+  flex: 1;
   align-items: center;
-  margin-right: 24px;
   color: #1f1f1f;
   text-decoration: none;
 }
@@ -151,9 +125,30 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
 }
 
 .header-menu {
-  flex: 1;
+  flex: 0 auto;
   min-width: 0;
   border-bottom: none;
+  justify-content: center;
+  padding: 0 100px;
+}
+
+.header-menu :deep(.ant-menu-item) {
+  margin: 0 12px;
+  padding: 0;
+}
+
+.header-menu :deep(.ant-menu-item:first-child) {
+  margin-left: 0;
+}
+
+.header-menu :deep(.ant-menu-item:last-child) {
+  margin-right: 0;
+}
+
+.user-login-status {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .user-info {
@@ -169,16 +164,20 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
     padding: 12px 16px;
   }
 
-  .header-left {
-    flex-basis: 100%;
-  }
-
   .brand {
-    margin-right: 12px;
+    flex: none;
   }
 
   .title {
     font-size: 16px;
+  }
+
+  .user-login-status {
+    flex: none;
+  }
+
+  .header-menu {
+    flex: 1;
   }
 }
 </style>

@@ -6,30 +6,27 @@ import GlobalHeader from '@/components/GlobalHeader.vue'
 
 <template>
   <a-layout class="basic-layout">
+    <!-- 顶部导航栏 -->
     <GlobalHeader />
-    <a-layout-content class="basic-layout-content">
-      <RouterView />
+    <!-- 主要内容区域 -->
+    <a-layout-content class="main-content">
+      <router-view />
     </a-layout-content>
+    <!-- 底部版权信息 -->
     <GlobalFooter />
   </a-layout>
 </template>
 
 <style scoped>
 .basic-layout {
-  min-height: 100vh;
-  background: #f5f5f5;
+  background: none;
 }
 
-.basic-layout-content {
+.main-content {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 24px 88px;
-}
+  padding: 0;
+  background: none;
+  margin: 20px;
 
-@media (max-width: 768px) {
-  .basic-layout-content {
-    padding: 16px 16px 88px;
-  }
 }
 </style>
