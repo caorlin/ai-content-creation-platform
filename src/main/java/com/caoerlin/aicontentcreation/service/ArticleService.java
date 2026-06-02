@@ -3,6 +3,7 @@ package com.caoerlin.aicontentcreation.service;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.entity.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
 
 /**
@@ -10,6 +11,14 @@ import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
  * @description 针对表【article(文章表)】的数据库操作Service
  */
 public interface ArticleService extends IService<Article> {
+    /**
+     * 创建文章生成任务
+     *
+     * @param topic     文章选题
+     * @param loginUser 操作用户信息
+     * @return 任务taskId
+     */
+    String createArticleTask(String topic, User loginUser);
 
     /**
      * 更新文章状态
@@ -24,7 +33,7 @@ public interface ArticleService extends IService<Article> {
      * 保存文章内容
      *
      * @param taskId 任务id
-     * @param state 状态
+     * @param state  状态
      */
     void saveArticleContent(String taskId, ArticleState state);
 }

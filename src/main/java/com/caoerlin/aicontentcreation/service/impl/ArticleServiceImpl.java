@@ -1,15 +1,16 @@
 package com.caoerlin.aicontentcreation.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoerlin.aicontentcreation.common.exception.BusinessException;
 import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.entity.Article;
+import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
 import com.caoerlin.aicontentcreation.service.ArticleService;
 import com.caoerlin.aicontentcreation.mapper.ArticleMapper;
@@ -24,6 +25,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         implements ArticleService {
+
+    @Override
+    public String createArticleTask(String topic, User loginUser) {
+        log.info("开始执行创建文章任务接口");
+
+        if (StrUtil.isBlank(topic)) {
+            log.error("创建文章任务接口,文章选题不能为空,userAccount={}", loginUser.getUserAccount());
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请输入选题");
+        }
+
+        //生成文章任务id
+        String taskId = IdUtil.simpleUUID();
+
+        Article article = new Article();
+        article.setTaskId(taskId);
+        article.setUserId(loginUser.getId());
+
+        log.info("创建文章任务接口,创建文章开始保存文章任务,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
+        boolean result = save(article);
+        if (!result) {
+            log.error("创建文章任务接口,创建文章任务失败,userAccount={}", loginUser.getUserAccount());
+        }
+
+        log.info("创建文章任务接口,创建文章任务完成,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
+
+        return taskId;
+    }
 
     @Override
     public void updateArticleStatus(String taskId, ArticleStatusEnum articleStatusEnum, String errorMessage) {
