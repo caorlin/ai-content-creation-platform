@@ -62,6 +62,11 @@ public class ArticleVO implements Serializable {
     private String coverImage;
 
     /**
+     * 配图列表（JSON数组）
+     */
+    private String images;
+
+    /**
      * 状态
      */
     private String status;
