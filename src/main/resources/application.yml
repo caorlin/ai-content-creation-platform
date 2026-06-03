@@ -42,6 +42,7 @@ pexels:
 # nano-banana AI图片生成
 nano-banana:
   api-key: ${nano-banana.api-key}
+  model: gemini-3-pro-image-preview
 
 # 添加 COS 对象存储配置（需要从腾讯云获取）
 cos:
