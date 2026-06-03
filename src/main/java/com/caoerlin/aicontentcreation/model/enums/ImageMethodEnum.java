@@ -65,11 +65,11 @@ public enum ImageMethodEnum {
     private final Boolean aiGenerate;
     private final Boolean fallback;
 
-    private static final Map<String, ImageMethodEnum> imageNameRefImageMethodEnumMap = new HashMap<>();
+    private static final Map<String, ImageMethodEnum> STRING_IMAGE_METHOD_ENUM_HASH_MAP = new HashMap<>();
 
     static {
         for (ImageMethodEnum imageMethodEnum : ImageMethodEnum.values()) {
-            imageNameRefImageMethodEnumMap.put(imageMethodEnum.name, imageMethodEnum);
+            STRING_IMAGE_METHOD_ENUM_HASH_MAP.put(imageMethodEnum.name, imageMethodEnum);
         }
     }
 
@@ -83,7 +83,7 @@ public enum ImageMethodEnum {
         if (StrUtil.isBlank(name)) {
             return null;
         }
-        return imageNameRefImageMethodEnumMap.get(name);
+        return STRING_IMAGE_METHOD_ENUM_HASH_MAP.get(name);
     }
 
     public static ImageMethodEnum getDefaultSearchMethod() {
