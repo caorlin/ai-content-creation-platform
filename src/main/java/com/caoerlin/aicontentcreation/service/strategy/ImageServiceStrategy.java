@@ -2,7 +2,6 @@ package com.caoerlin.aicontentcreation.service.strategy;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.caoerlin.aicontentcreation.constant.ArticleConstant;
 import com.caoerlin.aicontentcreation.manager.CosManager;
 import com.caoerlin.aicontentcreation.model.dto.image.ImageData;
 import com.caoerlin.aicontentcreation.model.dto.image.ImageRequest;
@@ -10,7 +9,6 @@ import com.caoerlin.aicontentcreation.model.enums.ImageMethodEnum;
 import com.caoerlin.aicontentcreation.service.ImageSearchService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.caoerlin.aicontentcreation.constant.ArticleConstant.PICSUM_URL_TEMPLATE;
+import static com.caoerlin.aicontentcreation.constant.ImageConstont.PICSUM_URL_TEMPLATE;
 
 /**
  * @author zyj

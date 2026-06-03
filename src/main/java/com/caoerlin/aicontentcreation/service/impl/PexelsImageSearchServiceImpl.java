@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.caoerlin.aicontentcreation.constant.ArticleConstant.*;
+import static com.caoerlin.aicontentcreation.constant.ImageConstont.*;
 
 /**
  * pexels 图片搜索

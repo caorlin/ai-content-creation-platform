@@ -1,0 +1,26 @@
+package com.caoerlin.aicontentcreation.constant;
+
+/**
+ * @author zyj
+ */
+public interface ImageConstont {
+    /**
+     * Pexels API 地址
+     */
+    String PEXELS_API_URL = "https://api.pexels.com/v1/search";
+
+    /**
+     * Pexels 每页返回数量
+     */
+    int PEXELS_PER_PAGE = 1;
+
+    /**
+     * Pexels 图片方向：横向
+     */
+    String PEXELS_ORIENTATION_LANDSCAPE = "landscape";
+
+    /**
+     * Picsum 随机图片 URL 模板
+     */
+    String PICSUM_URL_TEMPLATE = "https://picsum.photos/800/600?random=%d";
+}
