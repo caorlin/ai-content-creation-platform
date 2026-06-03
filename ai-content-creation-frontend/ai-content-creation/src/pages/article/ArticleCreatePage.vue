@@ -459,40 +459,40 @@ const handleSSEMessage = (msg: SSEMessage) => {
   console.log('SSE消息:', msg)
 
   switch (msg.type) {
-    case 'AGENT1_COMPLETE':
+    case 'ARTICLE_TITLE_AGENT_COMPLETE':
       // 标题生成完成
       currentStep.value = 1
       article.value.mainTitle = msg.title?.mainTitle
       article.value.subTitle = msg.title?.subTitle
       break
 
-    case 'AGENT2_STREAMING':
+    case 'ARTICLE_OUTLINE_AGENT_STREAMING':
       // 大纲流式输出
       isOutlineStreaming.value = true
       outlineRaw.value += msg.content || ''
       scrollToBottom()
       break
 
-    case 'AGENT2_COMPLETE':
+    case 'ARTICLE_OUTLINE_AGENT_AGENT_COMPLETE':
       // 大纲完成
       isOutlineStreaming.value = false
       currentStep.value = 2
       break
 
-    case 'AGENT3_STREAMING':
+    case 'ARTICLE_CONTENT_AGENT_STREAMING':
       // 正文流式输出
       isStreaming.value = true
       article.value.content += msg.content || ''
       scrollToBottom()
       break
 
-    case 'AGENT3_COMPLETE':
+    case 'ARTICLE_CONTENT_AGENT_COMPLETE':
       // 正文完成
       isStreaming.value = false
       currentStep.value = 3
       break
 
-    case 'AGENT4_COMPLETE':
+    case 'ARTICLE_IMAGE_REQUIREMENTS_AGENT_COMPLETE':
       // 配图分析完成
       currentStep.value = 4
       totalImages.value = msg.imageRequirements?.length || 5
@@ -504,7 +504,7 @@ const handleSSEMessage = (msg: SSEMessage) => {
       imageProgress.value = Math.round((imageCount.value / totalImages.value) * 100)
       break
 
-    case 'AGENT5_COMPLETE':
+    case 'ARTICLE_IMAGE_GENERATE_AGENT_COMPLETE':
       // 所有配图完成
       currentStep.value = 5
       article.value.images = msg.images

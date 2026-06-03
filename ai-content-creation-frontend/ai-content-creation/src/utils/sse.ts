@@ -1,4 +1,4 @@
-/**
+﻿/**
  * SSE 工具函数
  * @author <a href="https://codefather.cn">编程导航学习圈</a>
 
@@ -22,7 +22,10 @@ export interface SSEOptions {
 export const connectSSE = (taskId: string, options: SSEOptions): EventSource => {
   const { onMessage, onError, onComplete } = options
 
-  const eventSource = new EventSource(`/api/article/progress/${taskId}`)
+  const eventSource = new EventSource(
+    `http://localhost:8567/api/article/progress/${taskId}`,
+    { withCredentials: true },
+  )
 
   eventSource.onmessage = (event) => {
     try {
@@ -41,8 +44,11 @@ export const connectSSE = (taskId: string, options: SSEOptions): EventSource => 
 
   eventSource.onerror = (error) => {
     console.error('SSE 连接错误:', error)
-    onError?.(error)
-    eventSource.close()
+    // 不立即 close，让浏览器尝试自动重连
+    // 仅在连接彻底失败时通知上层
+    if (eventSource.readyState === EventSource.CLOSED) {
+      onError?.(error)
+    }
   }
 
   return eventSource
