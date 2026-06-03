@@ -1,12 +1,14 @@
 package com.caoerlin.aicontentcreation.model.dto.image;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Data;
 
 /**
  * @author zyj
  * 图片请求
  * 统一封装图片检索想要的参数
  */
+@Data
 public class ImageRequest {
     /**
      * 关键词

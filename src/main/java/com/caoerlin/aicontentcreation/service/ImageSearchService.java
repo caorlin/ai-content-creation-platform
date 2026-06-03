@@ -1,5 +1,7 @@
 package com.caoerlin.aicontentcreation.service;
 
+import com.caoerlin.aicontentcreation.model.dto.image.ImageData;
+import com.caoerlin.aicontentcreation.model.dto.image.ImageRequest;
 import com.caoerlin.aicontentcreation.model.enums.ImageMethodEnum;
 
 /**
@@ -8,6 +10,30 @@ import com.caoerlin.aicontentcreation.model.enums.ImageMethodEnum;
  * @author zyj
  */
 public interface ImageSearchService {
+
+    /**
+     * 根据图片请求生成图片
+     *
+     * @param request 图片请求
+     * @return url
+     */
+    default String getImage(ImageRequest request) {
+        String effectiveParam = request.getEffectiveParam(getMethod().getAiGenerate());
+        return searchImage(effectiveParam);
+    }
+
+    /**
+     * 获取图片数据
+     *
+     * @param request 图片请求
+     * @return 图片参数
+     */
+    default ImageData getImageDate(ImageRequest request) {
+        //默认根据图片请求获取图片url
+        String url = getImage(request);
+        return ImageData.fromUrl(url);
+    }
+
     /**
      * 根据关键词检索图片
      *
@@ -17,7 +43,7 @@ public interface ImageSearchService {
     String searchImage(String keywords);
 
     /**
-     * 获取图片检索方式
+     * 获取图片生成方式
      *
      * @return 图片检索方式枚举
      */
