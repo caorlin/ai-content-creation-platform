@@ -16,6 +16,12 @@ export const headerMenuItems: MenuProps['items'] = [
     title: '文章创作',
   },
   {
+    key: '/article/list',
+    icon: () => h(BulbTwoTone),
+    label: '创作历史',
+    title: '创作历史',
+  },
+  {
     key: '/admin/userManage',
     label: '用户管理',
     title: '用户管理',

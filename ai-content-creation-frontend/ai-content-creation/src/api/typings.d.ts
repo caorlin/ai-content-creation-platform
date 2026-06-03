@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   type addUserParams = {
     userAddRequest: UserAddRequest
   }
@@ -28,7 +28,8 @@ declare namespace API {
     content?: string
     fullContent?: string
     coverImage?: string
-    images?: []
+    images?: string[]
+    outline?: OutlineItem[]
     status?: string
     phase?: string
     errorMessage?: string
@@ -115,11 +116,11 @@ declare namespace API {
     id?: number
     /** 账号名称 */
     userAccount?: string
-    /** 用户名 */
+    /** 用户�?*/
     username?: string
     /** 用户头像 */
     userAvatar?: string
-    /** 用户简介 */
+    /** 用户简�?*/
     userProfile?: string
     /** 用户角色：user/admin */
     userRole?: string
@@ -187,14 +188,14 @@ declare namespace API {
     userAccount?: string
     /** 用户头像 */
     userAvatar?: string
-    /** 用户简介 */
+    /** 用户简�?*/
     userProfile?: string
     /** 用户角色: user, admin */
     userRole?: string
   }
 
   type UserLoginRequest = {
-    /** 用户名 */
+    /** 用户�?*/
     userAccount?: string
     /** 密码 */
     userPassword?: string
@@ -211,14 +212,14 @@ declare namespace API {
     userName?: string
     /** 账号 */
     userAccount?: string
-    /** 简介 */
+    /** 简�?*/
     userProfile?: string
     /** 用户角色：user/admin/ban */
     userRole?: string
   }
 
   type UserRegisterRequest = {
-    /** 用户名 */
+    /** 用户�?*/
     userAccount?: string
     /** 密码 */
     userPassword?: string
@@ -233,10 +234,16 @@ declare namespace API {
     userName?: string
     /** 用户头像 */
     userAvatar?: string
-    /** 简介 */
+    /** 简�?*/
     userProfile?: string
     /** 用户角色：user/admin */
     userRole?: string
+  }
+
+  type OutlineItem = {
+    section?: string
+    title?: string
+    points?: string[]
   }
 
   type UserVO = {
