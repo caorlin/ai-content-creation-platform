@@ -18,8 +18,8 @@ public interface ImageSearchService {
      * @return url
      */
     default String getImage(ImageRequest request) {
-        String effectiveParam = request.getEffectiveParam(getMethod().getAiGenerate());
-        return searchImage(effectiveParam);
+        String promptOrKeywords = request.getEffectiveParam(getMethod().getAiGenerate());
+        return searchImage(promptOrKeywords);
     }
 
     /**
@@ -56,4 +56,13 @@ public interface ImageSearchService {
      * @return 降级图片URL
      */
     String getFallbackImage(int position);
+
+    /**
+     * 服务是否可用,其他服务可用重写该方法，改变状态
+     *
+     * @return 可用
+     */
+    default boolean isAvailable() {
+        return true;
+    }
 }
