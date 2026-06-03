@@ -86,7 +86,7 @@ public enum ImageMethodEnum {
         return STRING_IMAGE_METHOD_ENUM_HASH_MAP.get(name);
     }
 
-    public static int getDefaultSearchMethod() {
+    public static ImageMethodEnum getDefaultSearchMethod() {
         return PEXELS;
     }
 
