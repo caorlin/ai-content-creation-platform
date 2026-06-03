@@ -16,6 +16,11 @@ public class ImageRequest {
     private String keywords;
 
     /**
+     * 图片序号
+     */
+    private String position;
+
+    /**
      * AI生成提示词
      */
     private String prompt;
