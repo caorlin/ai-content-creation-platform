@@ -133,6 +133,13 @@
             <artifactId>cos_api</artifactId>
             <version>5.6.227</version>
         </dependency>
+
+        <!-- Google Gen AI Java SDK (Nano Banana 图片生成) -->
+        <dependency>
+            <groupId>com.google.genai</groupId>
+            <artifactId>google-genai</artifactId>
+            <version>1.35.0</version>
+        </dependency>
     </dependencies>
 
     <build>

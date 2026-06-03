@@ -39,6 +39,10 @@ spring:
 pexels:
   api-key: ${pexels.api-key}
 
+# nano-banana AI图片生成
+nano-banana:
+  api-key: ${nano-banana.api-key}
+
 # 添加 COS 对象存储配置（需要从腾讯云获取）
 cos:
   client:
