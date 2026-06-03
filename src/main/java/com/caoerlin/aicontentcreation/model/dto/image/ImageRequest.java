@@ -18,7 +18,7 @@ public class ImageRequest {
     /**
      * 图片序号
      */
-    private String position;
+    private Integer position;
 
     /**
      * AI生成提示词
