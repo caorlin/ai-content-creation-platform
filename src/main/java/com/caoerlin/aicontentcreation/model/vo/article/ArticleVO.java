@@ -47,6 +47,11 @@ public class ArticleVO implements Serializable {
     private String subTitle;
 
     /**
+     * 文章大纲
+     */
+    private String outline;
+
+    /**
      * 正文
      */
     private String content;
