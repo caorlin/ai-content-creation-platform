@@ -38,7 +38,7 @@ const goToList = () => {
 }
 
 const viewArticle = (article: API.ArticleVO) => {
-  router.push(`/article/${article.taskId}`)
+  router.push(`/article/detail/${article.taskId}`)
 }
 
 // 加载最近文章
