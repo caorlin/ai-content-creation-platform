@@ -144,12 +144,22 @@ public class CosManager {
             return null;
         }
         try (HttpResponse response = HttpRequest.get(imageUrl).execute()) {
+            if (!response.isOk()) {
+                log.warn("获取图片失败,imageUrl={}", imageUrl);
+                return null;
+            }
             //获取图片链接字节信息
             byte[] bytes = response.body().getBytes();
-            HttpResponse header = response.header("Content-Type", "image/jpeg");
+
+            String contentType = response.header("Content-Type");
+            if (StrUtil.isBlank(contentType) || contentType.startsWith("image/")) {
+                log.warn("响应 Content-Type 非图片类型: {}, 将使用默认值", contentType);
+                contentType = "image/jpeg";
+            }
+
 
             //上传字节数据
-            return uploadBytes(bytes, header.body(), folder);
+            return uploadBytes(bytes, contentType, folder);
         } catch (Exception e) {
             log.error("从 URL 上传图片到 COS 失败: {}", imageUrl, e);
             return null;
@@ -163,7 +173,7 @@ public class CosManager {
      * @return 图片 URL
      * @deprecated 使用 uploadImageData() 替代
      */
-    public String useDirectUrl(String imageUrl){
+    public String useDirectUrl(String imageUrl) {
         return imageUrl;
     }
 
