@@ -78,6 +78,7 @@ public class ArticleImageGenerateAgent {
                 .keywords(imageRequirement.getKeywords())
                 .sectionTitle(imageRequirement.getSectionTitle())
                 .placeholderId(imageRequirement.getPlaceholderId())
+                .description(imageRequirement.getType())
                 .build();
     }
 

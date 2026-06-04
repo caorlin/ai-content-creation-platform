@@ -231,7 +231,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         }
 
         //非管理员用户只能删除自己的文章
-        if (!UserRoleEnum.ADMIN.getValue().equals(loginUser.getUserRole()) && article.getUserId().equals(loginUser.getId())) {
+        if (!UserRoleEnum.ADMIN.getValue().equals(loginUser.getUserRole()) && !article.getUserId().equals(loginUser.getId())) {
             log.error("无法删除除自己创建的其他文章,userAccount={},文章id={}", loginUser.getUserAccount(), id);
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "无权限删除");
         }
