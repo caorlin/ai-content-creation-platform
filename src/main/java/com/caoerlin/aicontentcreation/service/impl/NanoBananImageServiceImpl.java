@@ -25,6 +25,7 @@ import static com.caoerlin.aicontentcreation.constant.ImageConstont.PICSUM_URL_T
 public class NanoBananImageServiceImpl implements ImageSearchService {
 
     private final NanoBananaConfig nanoBananaConfig;
+    private final Client nanoBananClient;
 
     @Override
     public String searchImage(String prompt) {
@@ -46,7 +47,7 @@ public class NanoBananImageServiceImpl implements ImageSearchService {
      */
     private ImageData generateImageData(String prompt) {
         //获取client
-        try (Client nanoClient = Client.builder().apiKey(nanoBananaConfig.getApiKey()).build()) {
+        try (nanoBananClient) {
             //图片配置
             ImageConfig.Builder imageConfigBuilder = ImageConfig.builder()
                     .aspectRatio(nanoBananaConfig.getAspectRatio());
@@ -65,7 +66,7 @@ public class NanoBananImageServiceImpl implements ImageSearchService {
 
             log.info("Nano Banan 开始生成图片,model={},prompt={}", model, prompt);
 
-            GenerateContentResponse response = nanoClient.models.generateContent(
+            GenerateContentResponse response = nanoBananClient.models.generateContent(
                     StrUtil.isBlank(model) ? "gemini-2.5-flash-image" : model,
                     prompt,
                     generateContentConfig

@@ -1,7 +1,10 @@
 package com.caoerlin.aicontentcreation.config;
 
+import com.google.genai.Client;
+import com.google.genai.types.HttpOptions;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -43,4 +46,19 @@ public class NanoBananaConfig {
      * 支持: image/jpeg, image/png
      */
     private String outputMimeType = "image/png";
+
+    private Integer timeout;
+
+    @Bean
+    public Client nanoBananClient() {
+        //设置超时时间
+        HttpOptions httpOptions = HttpOptions.builder()
+                .timeout(timeout)
+                .build();
+
+        return Client.builder()
+                .apiKey(apiKey)
+                .httpOptions(httpOptions)
+                .build();
+    }
 }
