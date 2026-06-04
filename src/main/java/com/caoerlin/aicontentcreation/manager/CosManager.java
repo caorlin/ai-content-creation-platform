@@ -143,16 +143,19 @@ public class CosManager {
             log.warn("图片 URL 为空，无法上传");
             return null;
         }
-        try (HttpResponse response = HttpRequest.get(imageUrl).execute()) {
+        try (HttpResponse response = HttpRequest.get(imageUrl)
+                .setFollowRedirects(true)  // 开启自动重定向
+                .setMaxRedirectCount(5)
+                .execute()) {
             if (!response.isOk()) {
                 log.warn("获取图片失败,imageUrl={}", imageUrl);
                 return null;
             }
             //获取图片链接字节信息
-            byte[] bytes = response.body().getBytes();
+            byte[] bytes = response.bodyBytes();
 
             String contentType = response.header("Content-Type");
-            if (StrUtil.isBlank(contentType) || contentType.startsWith("image/")) {
+            if (StrUtil.isBlank(contentType) || !contentType.startsWith("image/")) {
                 log.warn("响应 Content-Type 非图片类型: {}, 将使用默认值", contentType);
                 contentType = "image/jpeg";
             }
