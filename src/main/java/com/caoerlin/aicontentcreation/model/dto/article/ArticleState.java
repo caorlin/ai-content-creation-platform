@@ -1,5 +1,6 @@
 package com.caoerlin.aicontentcreation.model.dto.article;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -53,6 +54,11 @@ public class ArticleState implements Serializable {
      */
     private String fullContent;
 
+    /**
+     * 允许的配图方式列表（为空表示支持所有方式）
+     */
+    private List<String> enabledImageMethods;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -95,12 +101,20 @@ public class ArticleState implements Serializable {
         private String type;
         private String sectionTitle;
         private String keywords;
+        private String dataSource;
+        private String prompt;
+
+        /**
+         * 占位符ID，用于正文中定位插入位置
+         */
+        private String placeholderId;
     }
 
     /**
      * 配图结果
      */
     @Data
+    @Builder
     public static class ImageResult implements Serializable {
         private Integer position;
         private String url;
@@ -108,5 +122,26 @@ public class ArticleState implements Serializable {
         private String keywords;
         private String sectionTitle;
         private String description;
+
+        /**
+         * 占位符ID，用于正文中定位插入位置
+         */
+        private String placeholderId;
     }
+
+    /**
+     * 文字图片需求智能体返回结果（包含带占位符的正文和配图需求列表）
+     */
+    @Data
+    public static class ArticleImageRequirementsResult implements Serializable {
+        /**
+         * 包含占位符的正文内容
+         */
+        private String contentWithPlaceholders;
+        /**
+         * 配图需求列表
+         */
+        private List<ImageRequirement> imageRequirements;
+    }
+
 }

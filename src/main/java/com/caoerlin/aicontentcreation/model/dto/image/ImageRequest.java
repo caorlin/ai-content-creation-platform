@@ -1,6 +1,7 @@
 package com.caoerlin.aicontentcreation.model.dto.image;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * 统一封装图片检索想要的参数
  */
 @Data
+@Builder
 public class ImageRequest {
     /**
      * 关键词

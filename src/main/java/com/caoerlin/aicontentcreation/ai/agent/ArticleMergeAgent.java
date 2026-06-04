@@ -22,21 +22,34 @@ public class ArticleMergeAgent {
             return;
         }
 
-        StringBuilder fullContent = new StringBuilder();
+//        StringBuilder fullContent = new StringBuilder();
 
-        // 按行处理正文，在章节标题后插入对应图片
-        String[] lines = content.split("\n");
-        for (String line : lines) {
-            fullContent.append(line).append("\n");
+        String fullContent = content;
 
-            // 检查是否是章节标题（以 ## 开头）
-            if (line.startsWith("## ")) {
-                String sectionTitle = line.substring(3).trim();
-                insertImageAfterSection(fullContent, images, sectionTitle);
+        //遍历所有配图，将图片插入占位符位置
+        for (ArticleState.ImageResult image : images) {
+            //占位符id
+            String placeholderId = image.getPlaceholderId();
+            if (StrUtil.isNotBlank(placeholderId)) {
+                //[描述](url)
+                String imgMarkdown = "![" + image.getDescription() + "]" + "(" + image.getUrl() + ")";
+                fullContent = fullContent.replace(placeholderId, imgMarkdown);
             }
         }
 
-        state.setFullContent(fullContent.toString());
+//        // 按行处理正文，在章节标题后插入对应图片
+//        String[] lines = content.split("\n");
+//        for (String line : lines) {
+//            fullContent.append(line).append("\n");
+//
+//            // 检查是否是章节标题（以 ## 开头）
+//            if (line.startsWith("## ")) {
+//                String sectionTitle = line.substring(3).trim();
+//                insertImageAfterSection(fullContent, images, sectionTitle);
+//            }
+//        }
+
+        state.setFullContent(fullContent);
         log.info("图文合成完成, fullContentLength={}", fullContent.length());
     }
 
