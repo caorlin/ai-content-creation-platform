@@ -101,7 +101,7 @@ public class ArticleState implements Serializable {
         private String type;
         private String sectionTitle;
         private String keywords;
-        private String dataSource;
+        private String imageSource;
         private String prompt;
 
         /**

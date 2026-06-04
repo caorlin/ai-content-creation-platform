@@ -2,7 +2,6 @@ package com.caoerlin.aicontentcreation.ai.agent;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.manager.CosManager;
@@ -10,7 +9,6 @@ import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.dto.image.ImageRequest;
 import com.caoerlin.aicontentcreation.model.enums.ImageMethodEnum;
 import com.caoerlin.aicontentcreation.service.ImageSearchService;
-import com.caoerlin.aicontentcreation.service.impl.PexelsImageSearchServiceImpl;
 import com.caoerlin.aicontentcreation.service.strategy.ImageServiceStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +49,7 @@ public class ArticleImageGenerateAgent {
                     .build();
 
             //检索生成图片，并且上传到cos
-            ImageServiceStrategy.ImageResult result = imageServiceStrategy.getImageAndUpload(imageRequirement.getDataSource(), request);
+            ImageServiceStrategy.ImageResult result = imageServiceStrategy.getImageAndUpload(imageRequirement.getImageSource(), request);
 
             String cosUrl = result.getUrl();
             ImageMethodEnum method = result.getMethod();
