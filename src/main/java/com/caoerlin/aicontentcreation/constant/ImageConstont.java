@@ -43,4 +43,8 @@ public interface ImageConstont {
 
 // endregion
 
+    Integer SVG_DEFAULT_WIDTH = 1200;
+
+    Integer SVG_DEFAULT_HEIGHT = 800;
+
 }

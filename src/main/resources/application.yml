@@ -35,6 +35,9 @@ spring:
     article-content-agent-model:
       api-key: ${dashscope.api-key}
       model: qwen-max
+    image-generate-model:
+      api-key: ${dashscope.api-key}
+      model: qwen-plus
 
 pexels:
   api-key: ${pexels.api-key}
