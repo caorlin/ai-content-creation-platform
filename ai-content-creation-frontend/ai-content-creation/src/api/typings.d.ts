@@ -8,6 +8,7 @@
     topic?: string
     /** 文章风格 */
     style?: string
+    enabledImageMethods?: string[]
   }
 
   type ArticleQueryRequest = {

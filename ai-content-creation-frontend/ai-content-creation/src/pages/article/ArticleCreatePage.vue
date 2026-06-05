@@ -61,7 +61,8 @@
               />
               <!-- 文章风格选择 -->
               <div class="style-selector">
-                <div class="style-label">文章风格
+                <div class="style-label">
+                  文章风格
                   <span>(不选择使用默认风格)</span>
                 </div>
                 <a-radio-group v-model:value="style" class="style-radio-group">
@@ -81,6 +82,51 @@
                     <a-radio value="humorous">幽默风趣风格</a-radio>
                   </div>
                 </a-radio-group>
+              </div>
+              <!-- 配图方式选择 -->
+              <div class="style-selector">
+                <div class="style-label">
+                  配图方式
+                  <span>(不选择使用默认方式)</span>
+                </div>
+                <a-checkbox-group v-model:value="enabledImageMethods" class="style-radio-group">
+                  <div
+                    class="style-option"
+                    :class="{ active: enabledImageMethods.includes(`PEXELS`) }"
+                  >
+                    <a-checkbox value="PEXELS">Pexels</a-checkbox>
+                  </div>
+                  <div
+                    class="style-option"
+                    :class="{ active: enabledImageMethods.includes(`NANO_BANANA`) }"
+                  >
+                    <a-checkbox value="NANO_BANANA">Nano Banana</a-checkbox>
+                  </div>
+                  <div
+                    class="style-option"
+                    :class="{ active: enabledImageMethods.includes(`MERMAID`) }"
+                  >
+                    <a-checkbox value="MERMAID">Mermaid</a-checkbox>
+                  </div>
+                  <div
+                    class="style-option"
+                    :class="{ active: enabledImageMethods.includes(`ICONIFY`) }"
+                  >
+                    <a-checkbox value="ICONIFY">Iconify</a-checkbox>
+                  </div>
+                  <div
+                    class="style-option"
+                    :class="{ active: enabledImageMethods.includes(`EMOJI_PACK`) }"
+                  >
+                    <a-checkbox value="EMOJI_PACK">表情包</a-checkbox>
+                  </div>
+                  <div
+                    class="style-option"
+                    :class="{ active: enabledImageMethods.includes(`SVG_DIAGRAM`) }"
+                  >
+                    <a-checkbox value="SVG_DIAGRAM">SVG</a-checkbox>
+                  </div>
+                </a-checkbox-group>
               </div>
               <a-button
                 type="primary"
@@ -367,6 +413,7 @@ const taskId = ref('')
 const errorVisible = ref(false)
 const errorMessage = ref('')
 const hasQuota = ref(true)
+const enabledImageMethods = ref<String[]>([])
 
 // 大纲数据（流式）
 const outlineRaw = ref('')
@@ -463,7 +510,11 @@ const startCreate = async () => {
 
   try {
     // 创建任务
-    const res = await createArticle({ topic: topic.value, style: style.value })
+    const res = await createArticle({
+      topic: topic.value,
+      style: style.value,
+      enabledImageMethods: enabledImageMethods.value,
+    })
     taskId.value = res.data.data
 
     // 建立 SSE 连接
@@ -862,13 +913,13 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
 
-    .ant-radio-wrapper {
+    .ant-radio-wrapper,
+    .ant-checkbox-wrapper {
       margin-right: 0;
       font-size: 14px;
       font-weight: 500;
       color: var(--color-text-secondary);
       transition: color var(--transition-fast);
-      white-space: normal;
       white-space: nowrap;
     }
 
@@ -876,7 +927,8 @@ onBeforeUnmount(() => {
       border-color: var(--color-primary);
       background: rgba(34, 197, 94, 0.03);
 
-      .ant-radio-wrapper {
+      .ant-radio-wrapper,
+      .ant-checkbox-wrapper {
         color: var(--color-text-primary);
       }
     }
@@ -886,7 +938,8 @@ onBeforeUnmount(() => {
       background: rgba(34, 197, 94, 0.08);
       box-shadow: 0 0 0 1px var(--color-primary);
 
-      .ant-radio-wrapper {
+      .ant-radio-wrapper,
+      .ant-checkbox-wrapper {
         color: var(--color-primary);
         font-weight: 600;
       }
