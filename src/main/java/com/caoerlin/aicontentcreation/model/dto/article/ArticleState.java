@@ -64,6 +64,22 @@ public class ArticleState implements Serializable {
      */
     private String style;
 
+    /**
+     * 用户补充描述
+     */
+    private String userDescription;
+
+    /**
+     * 当前阶段：PENDING/TITLE_GENERATING/TITLE_SELECTING/OUTLINE_GENERATING/OUTLINE_EDITING/CONTENT_GENERATING
+     */
+    private String phase;
+
+    /**
+     * 标题选项
+     */
+    private List<TitleOption> titleOptions;
+
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -75,6 +91,12 @@ public class ArticleState implements Serializable {
      */
     @Data
     public static class TitleResult implements Serializable {
+        private String mainTitle;
+        private String subTitle;
+    }
+
+    @Data
+    public static class TitleOption implements Serializable{
         private String mainTitle;
         private String subTitle;
     }

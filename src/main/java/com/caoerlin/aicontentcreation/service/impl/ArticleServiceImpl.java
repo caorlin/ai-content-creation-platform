@@ -10,11 +10,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.caoerlin.aicontentcreation.ai.agent.ArticleOutlineAgent;
 import com.caoerlin.aicontentcreation.common.exception.BusinessException;
 import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleQueryRequest;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.entity.Article;
+import com.caoerlin.aicontentcreation.model.entity.User;
+import com.caoerlin.aicontentcreation.model.enums.ArticleCreatePhaseEnum;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
@@ -39,6 +42,7 @@ import java.util.List;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         implements ArticleService {
     private final ArticleMapper articleMapper;
+    private final ArticleOutlineAgent articleOutlineAgent;
 
     @Override
     public String createArticleTask(String topic, String style, List<String> enableImageMethods, LoginUserVO loginUser) {
@@ -251,6 +255,103 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         return result;
     }
 
+    @Override
+    public void confirmTitle(String taskId, String mainTitle, String subTitle, String userDescription, User loginUser) {
+        //校验文章是否存在
+        Article article = checkArticleTask(taskId);
+
+        //判断用户是否有该文章权限
+        checkArticlePermissions(article, loginUser);
+
+        //判断文章当前阶段是否可操作，必需是 ArticleCreatePhaseEnum.TITLE_SELECTING
+        checkArticlePhage(article.getPhase(), ArticleCreatePhaseEnum.TITLE_SELECTING);
+
+        //更新文章标题,用户描述
+        article.setMainTitle(mainTitle);
+        article.setStatus(subTitle);
+        article.setUserDescription(userDescription);
+        //修改为大纲生成中
+        article.setPhase(ArticleCreatePhaseEnum.OUTLINE_GENERATING.getPhase());
+
+        updateById(article);
+
+        log.info("用户已确认文章标题,taskId={},mainTitle={}", taskId, mainTitle);
+    }
+
+
+    @Override
+    public void confirmOutline(String taskId, List<ArticleState.OutlineSection> outline, User loginUser) {
+        //校验文章是否存在
+        Article article = checkArticleTask(taskId);
+
+        //校验权限
+        checkArticlePermissions(article, loginUser);
+
+        //判断文章当前阶段是否可操作,必需是 ArticleCreatePhaseEnum.OUTLINE_EDITING
+        checkArticlePhage(article.getPhase(), ArticleCreatePhaseEnum.OUTLINE_EDITING);
+
+        //保存用户编辑后的大纲
+        article.setOutline(JSONUtil.toJsonStr(outline));
+        //修改阶段为文章生成中
+        article.setPhase(ArticleCreatePhaseEnum.CONTENT_GENERATING.getPhase());
+
+        updateById(article);
+
+        log.info("用户已确认文章大纲,taskId={},selectionSize={}", taskId, outline.size());
+
+    }
+
+
+    @Override
+    public void updatePhase(String taskId, ArticleCreatePhaseEnum phase) {
+        //校验文章是否存在
+        Article article = checkArticleTask(taskId);
+
+        article.setPhase(phase.getPhase());
+        updateById(article);
+
+        log.info("文章阶段已更新,taskId={},phage={}", taskId, phase);
+    }
+
+    @Override
+    public void saveTitleOptions(String taskId, List<ArticleState.TitleOption> titleOptions) {
+        //校验文章是否存在
+        Article article = checkArticleTask(taskId);
+
+        article.setTitleOptions(JSONUtil.toJsonStr(titleOptions));
+        updateById(article);
+        log.info("文章标题选项已添加,taskId={},titleSize={}", taskId, titleOptions.size());
+    }
+
+    @Override
+    public List<ArticleState.OutlineSection> aiModifyOutline(String taskId, String modifySuggestion, User loginUser) {
+        //校验文章是否存在
+        Article article = checkArticleTask(taskId);
+        //检验用户是否有操作权限
+        checkArticlePermissions(article, loginUser);
+        //校验现阶段用户是否可操作，必需是 ArticleCreatePhaseEnum.OUTLINE_EDITING
+        checkArticlePhage(article.getPhase(), ArticleCreatePhaseEnum.OUTLINE_EDITING);
+
+        //获取当前大纲
+        String currentOutlineJsonStr = article.getOutline();
+        List<ArticleState.OutlineSection> currentOutlineList = JSONUtil.toList(currentOutlineJsonStr, ArticleState.OutlineSection.class);
+
+        //调用 AI 修改大纲
+        List<ArticleState.OutlineSection> modifyOutlineList = articleOutlineAgent.aiModifyOutline(
+                article.getMainTitle(),
+                article.getSubTitle(),
+                currentOutlineList,
+                modifySuggestion
+        );
+
+        //保存
+        article.setOutline(JSONUtil.toJsonStr(modifyOutlineList));
+        updateById(article);
+
+        log.info("AI 修改大纲完成,taskId={},modifyOutlineSize={}", taskId, modifyOutlineList.size());
+        return modifyOutlineList;
+    }
+
     private Article getArticleByTaskId(String taskId) {
         if (StrUtil.isBlank(taskId)) {
             log.error("文章任务id为空");
@@ -260,6 +361,58 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Article::getTaskId, taskId);
         return getOne(wrapper);
+    }
+
+    /**
+     * 判断任务id是否为空
+     *
+     * @param taskId 任务id
+     */
+    private Article checkArticleTask(String taskId) {
+        if (StrUtil.isBlank(taskId)) {
+            log.error("标题提交接口,任务id为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "任务不能为空");
+        }
+
+        //根据任务id获取文章信息
+        Article article = getArticleByTaskId(taskId);
+        if (ObjectUtil.isNull(article)) {
+            log.error("文章不存在,taskId={}", taskId);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "操作失败,文章不存在");
+        }
+        return article;
+    }
+
+    /**
+     * 校验文章权限
+     *
+     * @param article   文章信息
+     * @param loginUser 用户信息
+     */
+    private void checkArticlePermissions(Article article, User loginUser) {
+        //管理员可以任意使用
+        if (UserRoleEnum.ADMIN.getValue().equals(loginUser.getUserRole())) {
+            return;
+        }
+
+        //非管理员只能操作自己的文章
+        if (!article.getUserId().equals(loginUser.getId())) {
+            log.error("没有文章{}操作权限,userAccount={},taskId={}", article.getId(), loginUser.getUserAccount(), article.getTaskId());
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无操作权限");
+        }
+    }
+
+    /**
+     * 检验文章阶段是否可执行
+     *
+     * @param articleCurrentPhase 文章阶段
+     */
+    private void checkArticlePhage(String articleCurrentPhase, ArticleCreatePhaseEnum userConfirmPhage) {
+        ArticleCreatePhaseEnum articleCreatePhaseEnum = ArticleCreatePhaseEnum.getByPhase(articleCurrentPhase);
+        if (ObjectUtil.notEqual(articleCreatePhaseEnum, userConfirmPhage)) {
+            log.error("文章现阶段：{},不允许用户执行{}阶段的操作", articleCreatePhaseEnum, userConfirmPhage);
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "当前不允许此操作");
+        }
     }
 }
 

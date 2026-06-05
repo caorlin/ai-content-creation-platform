@@ -11,9 +11,19 @@ public enum SseMessageTypeEnum {
     ARTICLE_TITLE_AGENT_COMPLETE("ARTICLE_TITLE_AGENT_COMPLETE", "标题生成完成"),
 
     /**
+     * 标题生成方案已完成（等待用户选择）
+     */
+    ARTICLE_TITLE_GENERATED("ARTICLE_TITLE_GENERATED", "文章标题生成完成等待用户选择"),
+
+    /**
      * 智能体2流式输出（大纲）
      */
     ARTICLE_OUTLINE_AGENT_STREAMING("ARTICLE_OUTLINE_AGENT_STREAMING", "大纲流式输出"),
+
+    /**
+     * 文章大纲已生成(等待用户编辑)
+     */
+    ARTICLE_OUTLINE_GENERATED("ARTICLE_OUTLINE_GENERATED", "文章大纲已生成"),
 
     /**
      * 智能体2完成（生成大纲）
