@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="article-create-page">
     <!-- 三栏布局容器 -->
     <div class="create-layout">
@@ -61,7 +61,9 @@
               />
               <!-- 文章风格选择 -->
               <div class="style-selector">
-                <div class="style-label">文章风格</div>
+                <div class="style-label">文章风格
+                  <span>(不选择使用默认风格)</span>
+                </div>
                 <a-radio-group v-model:value="style" class="style-radio-group">
                   <div class="style-option" :class="{ active: style === `` }">
                     <a-radio value="">默认</a-radio>
@@ -831,6 +833,13 @@ onBeforeUnmount(() => {
     font-size: 14px;
     font-weight: 600;
     color: var(--color-text-primary);
+
+    span {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--color-text-muted);
+      margin-left: 4px;
+    }
   }
 }
 
