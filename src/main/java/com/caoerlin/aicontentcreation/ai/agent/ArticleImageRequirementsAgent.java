@@ -33,6 +33,8 @@ public class ArticleImageRequirementsAgent {
 
         String availableMethods = buildAvailableMethodsDescription(state.getEnabledImageMethods());
 
+        log.info("获取文章配图来源成功,availableMethods={}", availableMethods);
+
         //生成文章需要的图片关键字prompt
         String prompt = PromptConstant.ARTICLE_IMAGE_REQUIREMENTS_AGENT_PROMPT
                 .replace("{mainTitle}", state.getTitle().getMainTitle())

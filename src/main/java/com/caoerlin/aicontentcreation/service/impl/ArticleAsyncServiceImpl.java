@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.caoerlin.aicontentcreation.constant.ArticleConstant.*;
@@ -35,7 +36,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
 
     @Override
     @Async("articleExecutor")
-    public void executeArticleGeneration(String taskId, String style, String topic) {
+    public void executeArticleGeneration(String taskId, String topic, String style, List<String> enableImageMethods) {
         log.info("开始异步生成文章,taskId={},topic={}", taskId, topic);
         try {
             //更新文章状态为执行中
@@ -46,6 +47,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
             state.setTopic(topic);
             state.setTaskId(taskId);
             state.setStyle(style);
+            state.setEnabledImageMethods(enableImageMethods);
 
             //执行文章创建Agent，SSE实时推送
             articleCreationAgent.executeArticleGeneration(state, message -> {

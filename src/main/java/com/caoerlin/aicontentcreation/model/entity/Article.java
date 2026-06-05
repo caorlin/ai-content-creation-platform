@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * 文章表
@@ -86,6 +84,11 @@ public class Article implements Serializable {
      * 状态：PENDING/PROCESSING/COMPLETED/FAILED
      */
     private String status;
+
+    /**
+     * 允许的配图方式列表 (JSON数组)
+     */
+    private String enabledImageMethods;
 
     /**
      * 错误信息

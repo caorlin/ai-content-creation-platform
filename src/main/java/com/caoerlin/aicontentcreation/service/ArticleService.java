@@ -11,6 +11,8 @@ import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 
+import java.util.List;
+
 /**
  * @author zyj
  * @description 针对表【article(文章表)】的数据库操作Service
@@ -19,12 +21,13 @@ public interface ArticleService extends IService<Article> {
     /**
      * 创建文章生成任务
      *
-     * @param topic     文章选题
-     * @param style     文章风格
-     * @param loginUser 操作用户信息
+     * @param topic              文章选题
+     * @param style              文章风格
+     * @param enableImageMethods 文章配图方式
+     * @param loginUser          操作用户信息
      * @return 任务taskId
      */
-    String createArticleTask(String topic, String style, LoginUserVO loginUser);
+    String createArticleTask(String topic, String style, List<String> enableImageMethods, LoginUserVO loginUser);
 
     /**
      * 更新文章状态

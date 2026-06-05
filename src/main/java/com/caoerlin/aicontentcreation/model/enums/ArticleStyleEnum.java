@@ -5,9 +5,11 @@ import cn.hutool.core.util.StrUtil;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 @Getter
 @RequiredArgsConstructor
 public enum ArticleStyleEnum {
@@ -69,7 +71,18 @@ public enum ArticleStyleEnum {
         };
     }
 
-    public static boolean hasStyle(String style){
-        return ObjectUtil.isNotNull(getInstanceByStyle(style));
+    public static boolean hasStyle(String style) {
+        //使用默认的风格
+        if (StrUtil.equals(style, "")) {
+            return true;
+        }
+
+        ArticleStyleEnum articleStyleEnum = getInstanceByStyle(style);
+
+        if (ObjectUtil.isNull(articleStyleEnum)) {
+            return false;
+        }
+
+        return true;
     }
 }

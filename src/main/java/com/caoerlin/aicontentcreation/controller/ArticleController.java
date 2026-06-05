@@ -26,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
  * @author zyj
  */
@@ -46,6 +49,7 @@ public class ArticleController {
                                               HttpServletRequest httpServletRequest) {
         String topic = request.getTopic();
         String style = request.getStyle();
+        List<String> enableImageMethods = request.getEnabledImageMethods();
         ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StrUtil.isBlank(topic), ErrorCode.PARAMS_ERROR, "选题不能为空");
         ThrowUtils.throwIf(!ArticleStyleEnum.hasStyle(style), ErrorCode.PARAMS_ERROR, "无效的文章风格");
@@ -54,10 +58,10 @@ public class ArticleController {
         LoginUserVO loginUser = userService.getLoginUser(httpServletRequest);
 
         //执行文章任务创建
-        String taskId = articleService.createArticleTask(topic, style, loginUser);
+        String taskId = articleService.createArticleTask(topic, style, enableImageMethods, loginUser);
 
         //异步创建文章
-        articleAsyncService.executeArticleGeneration(taskId, style, topic);
+        articleAsyncService.executeArticleGeneration(taskId, topic, style, enableImageMethods);
         return ResultUtils.success(taskId);
     }
 

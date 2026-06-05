@@ -15,7 +15,6 @@ import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleQueryRequest;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.entity.Article;
-import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
@@ -28,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,7 +41,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     private final ArticleMapper articleMapper;
 
     @Override
-    public String createArticleTask(String topic, String style, LoginUserVO loginUser) {
+    public String createArticleTask(String topic, String style, List<String> enableImageMethods, LoginUserVO loginUser) {
         log.info("开始执行创建文章任务接口");
 
         if (StrUtil.isBlank(topic)) {
@@ -64,6 +62,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         article.setUserId(loginUser.getId());
         article.setTopic(topic);
         article.setStyle(style);
+        article.setEnabledImageMethods(JSONUtil.toJsonStr(CollectionUtil.isNotEmpty(enableImageMethods) ? enableImageMethods : null));
 
         log.info("创建文章任务接口,创建文章开始保存文章任务,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
         boolean result = save(article);
