@@ -59,6 +59,27 @@
                 show-count
                 class="topic-textarea"
               />
+              <!-- 文章风格选择 -->
+              <div class="style-selector">
+                <div class="style-label">文章风格</div>
+                <a-radio-group v-model:value="style" class="style-radio-group">
+                  <div class="style-option" :class="{ active: style === `` }">
+                    <a-radio value="">默认</a-radio>
+                  </div>
+                  <div class="style-option" :class="{ active: style === `tech` }">
+                    <a-radio value="tech">科技风格</a-radio>
+                  </div>
+                  <div class="style-option" :class="{ active: style === `emotional` }">
+                    <a-radio value="emotional">情感风格</a-radio>
+                  </div>
+                  <div class="style-option" :class="{ active: style === `educational` }">
+                    <a-radio value="educational">教育风格</a-radio>
+                  </div>
+                  <div class="style-option" :class="{ active: style === `humorous` }">
+                    <a-radio value="humorous">幽默风趣风格</a-radio>
+                  </div>
+                </a-radio-group>
+              </div>
               <a-button
                 type="primary"
                 size="large"
@@ -334,6 +355,7 @@ const exampleTopics = [
 
 // 页面状态
 const topic = ref('')
+const style = ref('')
 const isCreating = ref(false)
 const isCompleted = ref(false)
 const isStreaming = ref(false)
@@ -439,7 +461,7 @@ const startCreate = async () => {
 
   try {
     // 创建任务
-    const res = await createArticle({ topic: topic.value })
+    const res = await createArticle({ topic: topic.value, style: style.value })
     taskId.value = res.data.data
 
     // 建立 SSE 连接
@@ -797,6 +819,69 @@ onBeforeUnmount(() => {
   &:focus {
     border-color: var(--color-primary);
     box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+  }
+}
+
+.style-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .style-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+}
+
+.style-radio-group {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: stretch;
+
+  .style-option {
+    flex: 1 1 160px;
+    padding: 12px 16px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-background);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .ant-radio-wrapper {
+      margin-right: 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      transition: color var(--transition-fast);
+      white-space: normal;
+      white-space: nowrap;
+    }
+
+    &:hover {
+      border-color: var(--color-primary);
+      background: rgba(34, 197, 94, 0.03);
+
+      .ant-radio-wrapper {
+        color: var(--color-text-primary);
+      }
+    }
+
+    &.active {
+      border-color: var(--color-primary);
+      background: rgba(34, 197, 94, 0.08);
+      box-shadow: 0 0 0 1px var(--color-primary);
+
+      .ant-radio-wrapper {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+    }
   }
 }
 

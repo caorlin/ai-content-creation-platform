@@ -6,6 +6,8 @@
   type ArticleCreateRequest = {
     /** 文章选题 */
     topic?: string
+    /** 文章风格 */
+    style?: string
   }
 
   type ArticleQueryRequest = {
