@@ -59,6 +59,11 @@ public class ArticleState implements Serializable {
      */
     private List<String> enabledImageMethods;
 
+    /**
+     * 文章风格
+     */
+    private String style;
+
     private static final long serialVersionUID = 1L;
 
     /**

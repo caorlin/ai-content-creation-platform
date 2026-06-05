@@ -43,6 +43,11 @@ public class Article implements Serializable {
     private String topic;
 
     /**
+     * 文章风格：tech/emotional/educational/humorous
+     */
+    private String style;
+
+    /**
      * 主标题
      */
     private String mainTitle;

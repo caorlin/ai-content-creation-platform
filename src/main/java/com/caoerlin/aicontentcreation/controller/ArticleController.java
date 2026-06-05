@@ -12,6 +12,7 @@ import com.caoerlin.aicontentcreation.common.response.ResultUtils;
 import com.caoerlin.aicontentcreation.manager.SseEmitterManager;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleCreateRequest;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleQueryRequest;
+import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 import com.caoerlin.aicontentcreation.service.ArticleAsyncService;
@@ -44,17 +45,19 @@ public class ArticleController {
     public BaseResponse<String> createArticle(@RequestBody ArticleCreateRequest request,
                                               HttpServletRequest httpServletRequest) {
         String topic = request.getTopic();
+        String style = request.getStyle();
         ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StrUtil.isBlank(topic), ErrorCode.PARAMS_ERROR, "选题不能为空");
+        ThrowUtils.throwIf(!ArticleStyleEnum.hasStyle(style), ErrorCode.PARAMS_ERROR, "无效的文章风格");
 
         //获取当前登录对象
         LoginUserVO loginUser = userService.getLoginUser(httpServletRequest);
 
         //执行文章任务创建
-        String taskId = articleService.createArticleTask(topic, loginUser);
+        String taskId = articleService.createArticleTask(topic, style, loginUser);
 
         //异步创建文章
-        articleAsyncService.executeArticleGeneration(taskId, topic);
+        articleAsyncService.executeArticleGeneration(taskId, style, topic);
         return ResultUtils.success(taskId);
     }
 

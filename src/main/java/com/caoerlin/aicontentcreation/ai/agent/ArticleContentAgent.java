@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.function.Consumer;
 
+import static com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum.getArticleStylePrompt;
+
 /**
  * 文章内容生成
  *
@@ -36,7 +38,8 @@ public class ArticleContentAgent {
         String outlineJsonStr = JSONUtil.toJsonStr(outline.getSections());
         String prompt = PromptConstant.ARTICLE_CONTENT_AGENT_PROMPT.replace("{mainTitle}", title.getMainTitle())
                 .replace("{subTitle}", title.getSubTitle())
-                .replace("{outline}", outlineJsonStr);
+                .replace("{outline}", outlineJsonStr)
+                + getArticleStylePrompt(state.getStyle());
 
         //根据prompt生成文章内容
         String content = AiModelCallingUtils.callModelWithStreaming(articleContentModel, prompt, streamHandler, SseMessageTypeEnum.ARTICLE_CONTENT_AGENT_STREAMING);

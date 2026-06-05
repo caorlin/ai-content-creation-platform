@@ -20,10 +20,11 @@ public interface ArticleService extends IService<Article> {
      * 创建文章生成任务
      *
      * @param topic     文章选题
+     * @param style     文章风格
      * @param loginUser 操作用户信息
      * @return 任务taskId
      */
-    String createArticleTask(String topic, LoginUserVO loginUser);
+    String createArticleTask(String topic, String style, LoginUserVO loginUser);
 
     /**
      * 更新文章状态

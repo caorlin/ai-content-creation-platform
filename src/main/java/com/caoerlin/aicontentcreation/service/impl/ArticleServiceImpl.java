@@ -17,6 +17,7 @@ import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.entity.Article;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
+import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
@@ -42,12 +43,17 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     private final ArticleMapper articleMapper;
 
     @Override
-    public String createArticleTask(String topic, LoginUserVO loginUser) {
+    public String createArticleTask(String topic, String style, LoginUserVO loginUser) {
         log.info("开始执行创建文章任务接口");
 
         if (StrUtil.isBlank(topic)) {
             log.error("创建文章任务接口,文章选题不能为空,userAccount={}", loginUser.getUserAccount());
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请输入选题");
+        }
+
+        if (!ArticleStyleEnum.hasStyle(style)) {
+            log.error("创建文章任务接口,未知的文章风格,style={}", style);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "未知的文章风格");
         }
 
         //生成文章任务id
@@ -57,6 +63,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         article.setTaskId(taskId);
         article.setUserId(loginUser.getId());
         article.setTopic(topic);
+        article.setStyle(style);
 
         log.info("创建文章任务接口,创建文章开始保存文章任务,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
         boolean result = save(article);

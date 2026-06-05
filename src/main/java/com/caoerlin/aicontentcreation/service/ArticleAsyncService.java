@@ -9,7 +9,8 @@ public interface ArticleAsyncService {
      * 异步文章生成
      *
      * @param taskId 任务Id
+     * @param style  文章风格
      * @param topic  选题
      */
-    void executeArticleGeneration(String taskId, String topic);
+    void executeArticleGeneration(String taskId, String style, String topic);
 }

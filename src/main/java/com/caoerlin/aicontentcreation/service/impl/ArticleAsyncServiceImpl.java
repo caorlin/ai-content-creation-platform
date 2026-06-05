@@ -35,7 +35,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
 
     @Override
     @Async("articleExecutor")
-    public void executeArticleGeneration(String taskId, String topic) {
+    public void executeArticleGeneration(String taskId, String style, String topic) {
         log.info("开始异步生成文章,taskId={},topic={}", taskId, topic);
         try {
             //更新文章状态为执行中
@@ -45,6 +45,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
             ArticleState state = new ArticleState();
             state.setTopic(topic);
             state.setTaskId(taskId);
+            state.setStyle(style);
 
             //执行文章创建Agent，SSE实时推送
             articleCreationAgent.executeArticleGeneration(state, message -> {
