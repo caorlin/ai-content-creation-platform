@@ -6,7 +6,9 @@ import com.caoerlin.aicontentcreation.ai.agent.ArticleCreationAgent;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.manager.SseEmitterManager;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
+import com.caoerlin.aicontentcreation.model.enums.ArticleCreatePhaseEnum;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
+import com.caoerlin.aicontentcreation.service.ArticleAgentService;
 import com.caoerlin.aicontentcreation.service.ArticleAsyncService;
 import com.caoerlin.aicontentcreation.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
     private final ArticleService articleService;
     private final ArticleCreationAgent articleCreationAgent;
     private final SseEmitterManager sseEmitterManager;
+    private final ArticleAgentService articleAgentService;
 
 
     @Override
@@ -81,6 +84,49 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
         }
     }
 
+    void executeArticleTitleGeneratePhage(String taskId, String topic, String style) {
+        log.info("开始进入异步生成文章标题阶段,taskId={},topic={},stlye={}", taskId, topic, style);
+
+        try {
+            //更新文章状态
+            articleService.updateArticleStatus(taskId, ArticleStatusEnum.PROCESSING, "");
+            articleService.updatePhase(taskId, ArticleCreatePhaseEnum.TITLE_GENERATING);
+
+            //创建文章状态对象
+            ArticleState state = new ArticleState();
+            state.setTopic(topic);
+            state.setStyle(style);
+            state.setTaskId(taskId);
+
+            //执行文章标题生成Agent
+            articleAgentService.executeArticleTitleGeneratePhage(state, message -> {
+                handleAgentMessage(taskId, message, state);
+            });
+
+            //保存文章标题到数据库
+            articleService.saveTitleOptions(taskId, state.getTitleOptions());
+
+            //更新文章阶段状态，标题选择状态
+            articleService.updatePhase(taskId, ArticleCreatePhaseEnum.TITLE_SELECTING);
+
+            //推送标题生成完成消息
+            Map<String, Object> data = new HashMap<>();
+            data.put("titleOptions", state.getTitleOptions());
+            sendSseMessage(taskId, SseMessageTypeEnum.ARTICLE_TITLE_GENERATED, data);
+        } catch (Exception e) {
+            log.error("异步生成文章标题阶段执行失败,taskId={},e={}", taskId, e.getMessage());
+
+            //更新文章状态为失败
+            articleService.updateArticleStatus(taskId, ArticleStatusEnum.FAILED, e.getMessage());
+
+            //推送失败消息
+            sendSseMessage(taskId,SseMessageTypeEnum.ERROR,Map.of("message",e.getMessage()));
+
+            //完成
+            sseEmitterManager.complete(taskId);
+        }
+    }
+
     /**
      * 发送SSE消息
      *
@@ -88,7 +134,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
      * @param type              发送类型
      * @param additionalDataMap 附加消息
      */
-    private void sendSseMessage(String taskId, SseMessageTypeEnum type, Map<String, String> additionalDataMap) {
+    private void sendSseMessage(String taskId, SseMessageTypeEnum type, Map<String, Object> additionalDataMap) {
         Map<String, Object> data = new HashMap<>();
         data.put("type", type.getValue());
         data.putAll(additionalDataMap);

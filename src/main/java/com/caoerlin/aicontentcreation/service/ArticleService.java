@@ -84,11 +84,11 @@ public interface ArticleService extends IService<Article> {
     /**
      * 确认标题（用户选择后）
      *
-     * @param taskId       任务ID
-     * @param mainTitle    选中的主标题
-     * @param subTitle     选中的副标题
+     * @param taskId          任务ID
+     * @param mainTitle       选中的主标题
+     * @param subTitle        选中的副标题
      * @param userDescription 用户补充描述
-     * @param loginUser    当前登录用户
+     * @param loginUser       当前登录用户
      */
     void confirmTitle(String taskId, String mainTitle, String subTitle, String userDescription, User loginUser);
 
