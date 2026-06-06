@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum.getArticleStylePrompt;
 
 /**
@@ -37,10 +39,12 @@ public class ArcticTitleAgent {
         //调用模型生成文章标题
         String content = AiModelCallingUtils.callModel(articleTitleChatModel, articleTitlePrompt);
 
-        ArticleState.TitleResult titleResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.TitleResult.class, "文章标题");
-        //设置文章标题
-        state.setTitle(titleResult);
+        //ArticleState.TitleResult titleResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.TitleResult.class, "文章标题");
+        List<ArticleState.TitleOption> titleOptionList = AiResponseParseUtils.parseJsonListResponse(content, ArticleState.TitleOption.class, "文章标题");
+        //设置文章标题方案
+        //state.setTitle(titleResult);
+        state.setTitleOptions(titleOptionList);
 
-        log.info("智能体 ArcticTitleAgent 生成文章标题成功,mainTitle={}", titleResult.getMainTitle());
+        log.info("智能体 ArcticTitleAgent 生成文章标题方案成功,titleOptionSize={}", titleOptionList.size());
     }
 }
