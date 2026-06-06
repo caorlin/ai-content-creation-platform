@@ -41,7 +41,7 @@ public class ArcticTitleAgent {
 
         //ArticleState.TitleResult titleResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.TitleResult.class, "文章标题");
         List<ArticleState.TitleOption> titleOptionList = AiResponseParseUtils.parseJsonListResponse(content, ArticleState.TitleOption.class, "文章标题");
-        //设置文章标题方案
+        //设置文章标题
         //state.setTitle(titleResult);
         state.setTitleOptions(titleOptionList);
 
