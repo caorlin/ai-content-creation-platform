@@ -41,10 +41,10 @@ public class ArcticTitleAgent {
 
         //ArticleState.TitleResult titleResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.TitleResult.class, "文章标题");
         List<ArticleState.TitleOption> titleOptionList = AiResponseParseUtils.parseJsonListResponse(content, ArticleState.TitleOption.class, "文章标题");
-        //设置文章标题
+        //设置文章可选标题列表
         //state.setTitle(titleResult);
         state.setTitleOptions(titleOptionList);
 
-        log.info("智能体 ArcticTitleAgent 生成文章标题方案成功,titleOptionSize={}", titleOptionList.size());
+        log.info("智能体 ArcticTitleAgent 生成文章可选标题列表成功,titleOptionSize={}", titleOptionList.size());
     }
 }
