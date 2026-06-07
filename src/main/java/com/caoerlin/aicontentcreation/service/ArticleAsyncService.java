@@ -15,4 +15,13 @@ public interface ArticleAsyncService {
      * @param topic  选题
      */
     void executeArticleGeneration(String taskId, String topic, String style, List<String> enableImageMethods);
+
+    /**
+     * 文章标题生产阶段
+     *
+     * @param taskId 任务id
+     * @param topic  主题
+     * @param style  风格
+     */
+    void executeArticleTitleGeneratePhage(String taskId, String topic, String style);
 }
