@@ -35,20 +35,21 @@ public class ArticleOutlineAgent {
             return;
         }
 
-        //判断用户是否补充描述
-        String descriptionSelection = "";
-        if (StrUtil.isNotBlank(articleState.getUserDescription())) {
-            descriptionSelection = articleState.getUserDescription();
-        }
-
         //获取文章标题
         ArticleState.TitleResult title = articleState.getTitle();
         //生成文章大纲prompt
         String articleOutlinePrompt = PromptConstant.ARTICLE_OUTLINE_AGENT_PROMPT
                 .replace("{mainTitle}", title.getMainTitle())
                 .replace("{subTitle}", title.getSubTitle())
-                .replace("{descriptionSelection}", descriptionSelection)
                 + getArticleStylePrompt(articleState.getStyle());
+
+        //判断用户是否补充描述
+        String userDescription = articleState.getUserDescription();
+        if (StrUtil.isNotBlank(userDescription)) {
+            articleOutlinePrompt = articleOutlinePrompt.replace("{description}", userDescription);
+        }
+
+
         String content = AiModelCallingUtils.callModelWithStreaming(articleContentModel, articleOutlinePrompt, consumer, SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_STREAMING);
         //解析大纲
         ArticleState.OutlineResult outlineResult = AiResponseParseUtils.parseJsonResponse(content, ArticleState.OutlineResult.class, "文章大纲");
