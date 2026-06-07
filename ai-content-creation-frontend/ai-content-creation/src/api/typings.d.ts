@@ -1,6 +1,31 @@
-﻿declare namespace API {
+declare namespace API {
   type addUserParams = {
     userAddRequest: UserAddRequest
+  }
+
+  type ArticleAiModifyOutlineRequest = {
+    /** 任务id */
+    taskId?: string
+    /** 用户的修改建议 */
+    modifySuggestion?: string
+  }
+
+  type ArticleConfirmOutlineRequest = {
+    /** 任务id */
+    taskId?: string
+    /** 用户修改后的大纲列表 */
+    selectOutlineList?: OutlineSection[]
+  }
+
+  type ArticleConfirmTitleRequest = {
+    /** 任务id */
+    taskId?: string
+    /** 用户挑选的主标题 */
+    selectMainTitle?: string
+    /** 用户挑选的副标题 */
+    selectSubTitle?: string
+    /** 用户追加的标题描述（可选） */
+    description?: string
   }
 
   type ArticleCreateRequest = {
@@ -8,6 +33,7 @@
     topic?: string
     /** 文章风格 */
     style?: string
+    /** 文章配图生成方式 */
     enabledImageMethods?: string[]
   }
 
@@ -28,11 +54,11 @@
     userDescription?: string
     mainTitle?: string
     subTitle?: string
+    outline?: string
     content?: string
     fullContent?: string
     coverImage?: string
-    images?: string[]
-    outline?: OutlineItem[]
+    images?: string
     status?: string
     phase?: string
     errorMessage?: string
@@ -49,6 +75,12 @@
   type BaseResponseBoolean = {
     code?: number
     data?: boolean
+    message?: string
+  }
+
+  type BaseResponseListOutlineSection = {
+    code?: number
+    data?: OutlineSection[]
     message?: string
   }
 
@@ -94,6 +126,12 @@
     message?: string
   }
 
+  type BaseResponseVoid = {
+    code?: number
+    data?: Record<string, any>
+    message?: string
+  }
+
   type DeleteRequest = {
     id?: number
   }
@@ -119,11 +157,11 @@
     id?: number
     /** 账号名称 */
     userAccount?: string
-    /** 用户�?*/
+    /** 用户名 */
     username?: string
     /** 用户头像 */
     userAvatar?: string
-    /** 用户简�?*/
+    /** 用户简介 */
     userProfile?: string
     /** 用户角色：user/admin */
     userRole?: string
@@ -136,6 +174,12 @@
   type OrderItem = {
     column?: string
     asc?: boolean
+  }
+
+  type OutlineSection = {
+    section?: number
+    title?: string
+    points?: string[]
   }
 
   type PageArticleVO = {
@@ -191,14 +235,14 @@
     userAccount?: string
     /** 用户头像 */
     userAvatar?: string
-    /** 用户简�?*/
+    /** 用户简介 */
     userProfile?: string
     /** 用户角色: user, admin */
     userRole?: string
   }
 
   type UserLoginRequest = {
-    /** 用户�?*/
+    /** 用户名 */
     userAccount?: string
     /** 密码 */
     userPassword?: string
@@ -215,14 +259,14 @@
     userName?: string
     /** 账号 */
     userAccount?: string
-    /** 简�?*/
+    /** 简介 */
     userProfile?: string
     /** 用户角色：user/admin/ban */
     userRole?: string
   }
 
   type UserRegisterRequest = {
-    /** 用户�?*/
+    /** 用户名 */
     userAccount?: string
     /** 密码 */
     userPassword?: string
@@ -237,22 +281,16 @@
     userName?: string
     /** 用户头像 */
     userAvatar?: string
-    /** 简�?*/
+    /** 简介 */
     userProfile?: string
     /** 用户角色：user/admin */
     userRole?: string
   }
 
-  type OutlineItem = {
-    section?: string
-    title?: string
-    points?: string[]
-  }
-
   type UserVO = {
     id?: number
     userAccount?: string
-    userName?: string
+    username?: string
     userAvatar?: string
     userProfile?: string
     userRole?: string

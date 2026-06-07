@@ -55,6 +55,36 @@ export async function listArticle(body: API.ArticleQueryRequest, options?: { [ke
   })
 }
 
+/** 用户提交文章大纲接口 POST /article/outline/confirm */
+export async function confirmArticleOutline(
+  body: API.ArticleConfirmOutlineRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseVoid>('/article/outline/confirm', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
+/** AI 修改文章大纲 POST /article/outline/modify/ai */
+export async function aiModifyOutline(
+  body: API.ArticleAiModifyOutlineRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListOutlineSection>('/article/outline/modify/ai', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  })
+}
+
 /** 获取文章生成进度(SSE) GET /article/progress/${param0} */
 export async function getProgress(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -65,6 +95,21 @@ export async function getProgress(
   return request<API.SseEmitter>(`/article/progress/${param0}`, {
     method: 'GET',
     params: { ...queryParams },
+    ...(options || {}),
+  })
+}
+
+/** 用户提交文章标题接口 POST /article/title/confirm */
+export async function confirmArticleTile(
+  body: API.ArticleConfirmTitleRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseVoid>('/article/title/confirm', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
     ...(options || {}),
   })
 }
