@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="outline-editing-stage">
     <div class="stage-header">
       <h2 class="stage-title">编辑文章大纲</h2>
@@ -246,3 +246,243 @@ const handleAiModify = async () => {
   }
 }
 </script>
+
+<style scoped>
+.outline-editing-stage {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Header */
+.stage-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.stage-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.stage-subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Outline List */
+.outline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.outline-section {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  transition: all var(--transition-normal);
+}
+
+.outline-section:hover {
+  box-shadow: var(--shadow-card);
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.drag-handle {
+  color: var(--color-text-muted);
+  font-size: 18px;
+  cursor: grab;
+  user-select: none;
+  line-height: 1;
+  transition: color var(--transition-fast);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle:hover {
+  color: var(--color-primary);
+}
+
+.section-number {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-sm);
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}
+
+.section-title-input {
+  flex: 1;
+  border-radius: var(--radius-md);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+}
+
+.delete-btn {
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity var(--transition-fast);
+}
+
+.delete-btn:hover {
+  opacity: 1;
+}
+
+/* Section Points */
+.section-points {
+  padding-left: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.point-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.point-bullet {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.point-input {
+  flex: 1;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+.delete-point-btn {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  opacity: 0.5;
+  transition: opacity var(--transition-fast);
+  font-size: 14px;
+}
+
+.delete-point-btn:hover {
+  opacity: 1;
+  color: var(--color-error);
+}
+
+.add-point-btn {
+  border-radius: var(--radius-md);
+  border-style: dashed;
+  color: var(--color-text-muted);
+  border-color: var(--color-border);
+  transition: all var(--transition-fast);
+  margin-top: 4px;
+}
+
+.add-point-btn:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary-light);
+}
+
+/* AI Chat Section */
+.ai-chat-section {
+  margin-top: 24px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 14px;
+}
+
+.chat-header .anticon {
+  color: var(--color-primary);
+  font-size: 18px;
+}
+
+.chat-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-textarea {
+  border-radius: var(--radius-md);
+}
+
+.ai-modify-btn {
+  align-self: flex-end;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+}
+
+/* Actions */
+.actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.add-section-btn {
+  height: 46px;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-normal);
+}
+
+.add-section-btn:hover {
+  border-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.confirm-btn {
+  min-width: 200px;
+  height: 46px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-primary);
+  border: none;
+  box-shadow: var(--shadow-primary);
+  transition: all var(--transition-normal);
+}
+
+.confirm-btn:not(:disabled):hover {
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
+  transform: translateY(-1px);
+}
+</style>

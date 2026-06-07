@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="title-selecting-stage">
     <div class="stage-header">
       <h2 class="stage-title">选择标题方案</h2>
@@ -122,3 +122,149 @@ const handleConfirm = () => {
   })
 }
 </script>
+
+<style scoped>
+.title-selecting-stage {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* Header */
+.stage-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.stage-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.stage-subtitle {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Title Options */
+.title-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.title-option {
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+}
+
+.title-option:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+:deep(.ant-radio-wrapper) {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+:deep(.ant-radio) {
+  margin-top: 3px;
+}
+
+.title-content {
+  margin-left: 4px;
+}
+
+.title-main {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.title-sub {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+/* Custom Title Inputs */
+.custom-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  padding-left: 28px;
+}
+
+.custom-input {
+  border-radius: var(--radius-md);
+}
+
+/* Description Section */
+.description-section {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: var(--color-background-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.section-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.section-tip {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0 0 12px;
+}
+
+.description-textarea {
+  border-radius: var(--radius-md);
+}
+
+/* Actions */
+.actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
+}
+
+.confirm-btn {
+  min-width: 220px;
+  height: 46px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-primary);
+  border: none;
+  box-shadow: var(--shadow-primary);
+  transition: all var(--transition-normal);
+}
+
+.confirm-btn:not(:disabled):hover {
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
+  transform: translateY(-1px);
+}
+</style>
