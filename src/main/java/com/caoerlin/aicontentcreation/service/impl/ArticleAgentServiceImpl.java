@@ -43,7 +43,7 @@ public class ArticleAgentServiceImpl implements ArticleAgentService {
         try {
             log.info("文章大纲生成阶段，开始生成文章大纲,taskId={},style={}", state.getTaskId(), state.getStyle());
             articleOutlineAgent.generateArticleOutline(state, streamHandler);
-            streamHandler.accept(SseMessageTypeEnum.ARTICLE_OUTLINE_GENERATED.getValue());
+            streamHandler.accept(SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_AGENT_COMPLETE.getValue());
             log.info("文章大纲生成阶段,文章大纲生成完成,taskId={},outlineSectionSize={}", state.getTaskId(), state.getOutline().getSections().size());
         } catch (Exception e) {
             log.error("文章大纲生成阶段,文章大纲生成失败,taskId={},e={}", state.getTaskId(), e.getMessage());
