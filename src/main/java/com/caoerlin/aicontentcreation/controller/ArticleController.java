@@ -66,7 +66,7 @@ public class ArticleController {
         return ResultUtils.success(taskId);
     }
 
-    @PostMapping("confirm/title")
+    @PostMapping("title/confirm")
     @Operation(summary = "用户提交文章标题接口")
     public BaseResponse<Void> confirmArticleTile(@RequestBody ArticleConfirmTitleRequest request, HttpServletRequest httpServletRequest) {
         ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
@@ -87,7 +87,7 @@ public class ArticleController {
         return ResultUtils.success(null);
     }
 
-    @PostMapping("confirm/outline")
+    @PostMapping("outline/confirm")
     @Operation(summary = "用户提交文章大纲接口")
     public BaseResponse<Void> confirmArticleOutline(@RequestBody ArticleConfirmOutlineRequest request, HttpServletRequest httpServletRequest) {
         ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
