@@ -14,7 +14,7 @@ public class ArticleConfirmOutlineRequest implements Serializable {
     private String taskId;
 
     @Schema(name = "selectOutlineList", description = "用户修改后的大纲列表")
-    private List<ArticleState.OutlineResult> selectOutlineList;
+    private List<ArticleState.OutlineSection> selectOutlineList;
 
     @Serial
     private static final long serialVersionUID = 1L;
