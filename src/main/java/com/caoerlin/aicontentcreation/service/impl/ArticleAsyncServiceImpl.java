@@ -90,6 +90,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
     }
 
     @Override
+    @Async("articleExecutor")
     public void executeArticleTitleGeneratePhage(String taskId, String topic, String style) {
         log.info("开始进入异步生成文章标题阶段,taskId={},topic={},stlye={}", taskId, topic, style);
 
@@ -134,6 +135,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
     }
 
     @Override
+    @Async("articleExecutor")
     public void executeArticleOutlineGeneratePhage(String taskId) {
         log.info("文章大纲生成阶段：开始生成文章大纲,taskId={}", taskId);
 
