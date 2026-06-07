@@ -10,8 +10,10 @@ import com.caoerlin.aicontentcreation.common.request.DeleteRequest;
 import com.caoerlin.aicontentcreation.common.response.BaseResponse;
 import com.caoerlin.aicontentcreation.common.response.ResultUtils;
 import com.caoerlin.aicontentcreation.manager.SseEmitterManager;
+import com.caoerlin.aicontentcreation.model.dto.article.ArticleConfirmTitleRequest;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleCreateRequest;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleQueryRequest;
+import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
@@ -23,6 +25,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -60,9 +63,29 @@ public class ArticleController {
         //执行文章任务创建
         String taskId = articleService.createArticleTask(topic, style, enableImageMethods, loginUser);
 
-        //异步创建文章
-        articleAsyncService.executeArticleGeneration(taskId, topic, style, enableImageMethods);
+        //阶段1：异步创建文章标题
+        articleAsyncService.executeArticleTitleGeneratePhage(taskId, topic, style);
         return ResultUtils.success(taskId);
+    }
+
+    @PostMapping("confirm/title")
+    public BaseResponse<Void> confirmArticleTile(@RequestBody ArticleConfirmTitleRequest request, HttpServletRequest httpServletRequest) {
+        ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getTaskId()), ErrorCode.PARAMS_ERROR, "任务id不能为空");
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getSelectMainTitle()), ErrorCode.PARAMS_ERROR, "请选择文章标题");
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getSelectSubTitle()), ErrorCode.PARAMS_ERROR, "请选择文章副标题");
+
+        User loginUser = new User();
+        LoginUserVO user = userService.getLoginUser(httpServletRequest);
+        BeanUtils.copyProperties(user, loginUser);
+
+        //确认文章标题
+        articleService.confirmTitle(request.getTaskId(), request.getSelectMainTitle(), request.getSelectSubTitle(), request.getDescription(), loginUser);
+
+        //阶段2：开始生成文章大纲
+        articleAsyncService.executeArticleOutlineGeneratePhage(request.getTaskId());
+
+        return ResultUtils.success(null);
     }
 
     /**
