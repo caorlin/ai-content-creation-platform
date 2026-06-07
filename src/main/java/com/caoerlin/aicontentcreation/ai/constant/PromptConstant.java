@@ -121,12 +121,7 @@ public interface PromptConstant {
                - 注意：position=1 的封面图不需要占位符，不要放在正文中
                - 配图占位符可以放在任意合适位置（章节标题后、段落之间、列表项中、文字行内等）
             4. **只能从上述可用的配图方式中选择**, 为每个配图选择最合适的图片来源(imageSource):
-               - PEXELS: 适合真实场景、产品照片、人物照片、自然风景等写实图片
-               - NANO_BANANA: 适合创意插画、信息图表、需要文字渲染、抽象概念、艺术风格等 AI 生成图片
-               - MERMAID: 适合流程图、架构图、时序图、关系图、甘特图等结构化图表
-               - ICONIFY: 适合图标、符号、小型装饰性图标（如：箭头、勾选、星星、心形等）
-               - EMOJI_PACK: 适合表情包、搞笑图片、轻松幽默的配图
-               - SVG_DIAGRAM: 适合概念示意图、思维导图样式、逻辑关系展示（不涉及精确数据）
+                {availableMethods}
             5. 对于 PEXELS 来源: 提供英文搜索关键词(keywords),要准确、具体
             6. 对于 NANO_BANANA 来源: 提供详细的英文生图提示词(prompt),描述场景、风格、细节
             7. 对于 MERMAID 来源: 
@@ -150,6 +145,9 @@ public interface PromptConstant {
                - 示例：绘制思维导图样式的图，中心是"自律"，周围4个分支：习惯、环境、反馈、系统
             11. placeholderId 必须与正文中插入的占位符完全一致
             12. position=1 为封面图
+            13. 配图的方式必须严格按照上述的"可用的配图方式"给出的配图方式,不能有其他配图方式
+            14. 生成的 JSON 中 {imageSource} 字段的值必须是"可用的配图方式"已列出的,不允许出现和"可用的配图方式"无关的值
+            15. 请严格按照上述描述生成结果,不然系统会发生严重错误
             
             请直接返回 JSON 格式,不要有其他内容:
             {
@@ -159,7 +157,7 @@ public interface PromptConstant {
                   "position": 1,
                   "type": "cover",
                   "sectionTitle": "",
-                  "imageSource": "NANO_BANANA",
+                  "imageSource": "PEXELS",
                   "keywords": "",
                   "prompt": "A modern minimalist illustration of AI technology concept, featuring abstract neural network patterns with blue and purple gradient colors, clean design suitable for article cover, 16:9 aspect ratio",
                   "placeholderId": ""
