@@ -1,5 +1,6 @@
 package com.caoerlin.aicontentcreation.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -10,9 +11,7 @@ import com.caoerlin.aicontentcreation.common.request.DeleteRequest;
 import com.caoerlin.aicontentcreation.common.response.BaseResponse;
 import com.caoerlin.aicontentcreation.common.response.ResultUtils;
 import com.caoerlin.aicontentcreation.manager.SseEmitterManager;
-import com.caoerlin.aicontentcreation.model.dto.article.ArticleConfirmTitleRequest;
-import com.caoerlin.aicontentcreation.model.dto.article.ArticleCreateRequest;
-import com.caoerlin.aicontentcreation.model.dto.article.ArticleQueryRequest;
+import com.caoerlin.aicontentcreation.model.dto.article.*;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author zyj
@@ -85,6 +83,26 @@ public class ArticleController {
 
         //阶段2：开始生成文章大纲
         articleAsyncService.executeArticleOutlineGeneratePhage(request.getTaskId());
+
+        return ResultUtils.success(null);
+    }
+
+    @PostMapping("confirm/outline")
+    @Operation(summary = "用户提交文章大纲接口")
+    public BaseResponse<Void> confirmArticleOutline(@RequestBody ArticleConfirmOutlineRequest request, HttpServletRequest httpServletRequest) {
+        ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getTaskId()), ErrorCode.PARAMS_ERROR, "任务id不能为空");
+        ThrowUtils.throwIf(CollUtil.isEmpty(request.getSelectOutlineList()), ErrorCode.PARAMS_ERROR, "请输入文章大纲");
+
+        User loginUser = new User();
+        LoginUserVO user = userService.getLoginUser(httpServletRequest);
+        BeanUtils.copyProperties(user, loginUser);
+
+        //确认文章大纲
+        articleService.confirmOutline(request.getTaskId(), request.getSelectOutlineList(), loginUser);
+
+        //阶段3：开始生成文章正文
+        articleAsyncService.executeArticleContentGeneratePhage(request.getTaskId());
 
         return ResultUtils.success(null);
     }
