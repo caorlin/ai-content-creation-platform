@@ -12,14 +12,14 @@ public class ArticleConfirmTitleRequest implements Serializable {
     @Schema(name = "taskId", description = "任务id")
     private String taskId;
 
-    @Schema(name = "selectMainTitle", description = "用户挑选的主标题")
-    private String selectMainTitle;
+    @Schema(name = "selectedMainTitle", description = "用户挑选的主标题")
+    private String selectedMainTitle;
 
-    @Schema(name = "selectSubTitle", description = "用户挑选的副标题")
-    private String selectSubTitle;
+    @Schema(name = "selectedSubTitle", description = "用户挑选的副标题")
+    private String selectedSubTitle;
 
-    @Schema(name = "description", description = "用户追加的标题描述（可选）")
-    private String description;
+    @Schema(name = "userDescription", description = "用户追加的标题描述（可选）")
+    private String userDescription;
 
 
     @Serial

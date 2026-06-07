@@ -71,15 +71,15 @@ public class ArticleController {
     public BaseResponse<Void> confirmArticleTile(@RequestBody ArticleConfirmTitleRequest request, HttpServletRequest httpServletRequest) {
         ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StrUtil.isBlank(request.getTaskId()), ErrorCode.PARAMS_ERROR, "任务id不能为空");
-        ThrowUtils.throwIf(StrUtil.isBlank(request.getSelectMainTitle()), ErrorCode.PARAMS_ERROR, "请选择文章标题");
-        ThrowUtils.throwIf(StrUtil.isBlank(request.getSelectSubTitle()), ErrorCode.PARAMS_ERROR, "请选择文章副标题");
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getSelectedMainTitle()), ErrorCode.PARAMS_ERROR, "请选择文章标题");
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getSelectedSubTitle()), ErrorCode.PARAMS_ERROR, "请选择文章副标题");
 
         User loginUser = new User();
         LoginUserVO user = userService.getLoginUser(httpServletRequest);
         BeanUtils.copyProperties(user, loginUser);
 
         //确认文章标题
-        articleService.confirmTitle(request.getTaskId(), request.getSelectMainTitle(), request.getSelectSubTitle(), request.getDescription(), loginUser);
+        articleService.confirmTitle(request.getTaskId(), request.getSelectedMainTitle(), request.getSelectedSubTitle(), request.getUserDescription(), loginUser);
 
         //阶段2：开始生成文章大纲
         articleAsyncService.executeArticleOutlineGeneratePhage(request.getTaskId());
