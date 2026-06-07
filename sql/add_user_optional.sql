@@ -4,5 +4,5 @@
 ALTER TABLE article
     ADD COLUMN phase VARCHAR(50) DEFAULT 'PENDING' COMMENT '当前阶段：PENDING/TITLE_GENERATING/TITLE_SELECTING/OUTLINE_GENERATING/OUTLINE_EDITING/CONTENT_GENERATING' AFTER status,
     ADD COLUMN title_options JSON NULL COMMENT '标题方案列表（3-5个方案）' AFTER sub_title,
-    ADD COLUMN user_description TEXT NULL COMMENT '用户补充描述' AFTER topic
-
+    ADD COLUMN user_description TEXT NULL COMMENT '用户补充描述' AFTER topic,
+    ADD COLUMN enabled_image_methods JSON NULL COMMENT '允许的配图方式列表' AFTER user_description;
