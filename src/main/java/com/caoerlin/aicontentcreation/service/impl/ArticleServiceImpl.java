@@ -268,7 +268,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
         //更新文章标题,用户描述
         article.setMainTitle(mainTitle);
-        article.setStatus(subTitle);
+        article.setSubTitle(subTitle);
         article.setUserDescription(userDescription);
         //修改为大纲生成中
         article.setPhase(ArticleCreatePhaseEnum.OUTLINE_GENERATING.getPhase());
