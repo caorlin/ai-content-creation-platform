@@ -69,6 +69,7 @@ public class ArticleController {
     }
 
     @PostMapping("confirm/title")
+    @Operation(summary = "用户提交文章标题接口")
     public BaseResponse<Void> confirmArticleTile(@RequestBody ArticleConfirmTitleRequest request, HttpServletRequest httpServletRequest) {
         ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
         ThrowUtils.throwIf(StrUtil.isBlank(request.getTaskId()), ErrorCode.PARAMS_ERROR, "任务id不能为空");
