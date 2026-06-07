@@ -107,6 +107,24 @@ public class ArticleController {
         return ResultUtils.success(null);
     }
 
+    @PostMapping("outline/modify/ai")
+    @Operation(summary = "AI 修改文章大纲")
+    public BaseResponse<List<ArticleState.OutlineSection>> aiModifyOutline(
+            @RequestBody ArticleAiModifyOutlineRequest request,
+            HttpServletRequest httpServletRequest
+    ) {
+        ThrowUtils.throwIf(ObjectUtil.isNull(request), ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getTaskId()), ErrorCode.PARAMS_ERROR, "任务id不能为空");
+        ThrowUtils.throwIf(StrUtil.isBlank(request.getModifySuggestion()), ErrorCode.PARAMS_ERROR, "请输入大纲修改建议");
+
+        User loginUser = new User();
+        LoginUserVO user = userService.getLoginUser(httpServletRequest);
+        BeanUtils.copyProperties(user, loginUser);
+
+        List<ArticleState.OutlineSection> outlineSections = articleService.aiModifyOutline(request.getTaskId(), request.getModifySuggestion(), loginUser);
+        return ResultUtils.success(outlineSections);
+    }
+
     /**
      * SSE 进度推送
      */
