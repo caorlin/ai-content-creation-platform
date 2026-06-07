@@ -1,6 +1,7 @@
 package com.caoerlin.aicontentcreation.ai.agent;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
@@ -33,12 +34,20 @@ public class ArticleOutlineAgent {
             log.error("生成文章大纲异常,文章状态为空");
             return;
         }
+
+        //判断用户是否补充描述
+        String descriptionSelection = "";
+        if (StrUtil.isNotBlank(articleState.getUserDescription())) {
+            descriptionSelection = articleState.getUserDescription();
+        }
+
         //获取文章标题
         ArticleState.TitleResult title = articleState.getTitle();
         //生成文章大纲prompt
         String articleOutlinePrompt = PromptConstant.ARTICLE_OUTLINE_AGENT_PROMPT
                 .replace("{mainTitle}", title.getMainTitle())
                 .replace("{subTitle}", title.getSubTitle())
+                .replace("{descriptionSelection}", descriptionSelection)
                 + getArticleStylePrompt(articleState.getStyle());
         String content = AiModelCallingUtils.callModelWithStreaming(articleContentModel, articleOutlinePrompt, consumer, SseMessageTypeEnum.ARTICLE_OUTLINE_AGENT_STREAMING);
         //解析大纲
