@@ -185,7 +185,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
 
             log.info("文章大纲生成完成,taskId={},outlineSectionSize={}", taskId, state.getOutline().getSections().size());
         } catch (BusinessException e) {
-            log.error("文章大纲生成完成,taskId={},e={}", taskId, e.getMessage());
+            log.error("文章大纲生成失败,taskId={},e={}", taskId, e.getMessage());
 
             //更新文章状态为失败
             articleService.updateArticleStatus(taskId, ArticleStatusEnum.FAILED, e.getMessage());
