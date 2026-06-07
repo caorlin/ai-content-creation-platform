@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   type addUserParams = {
     userAddRequest: UserAddRequest
   }
@@ -21,11 +21,11 @@ declare namespace API {
     /** 任务id */
     taskId?: string
     /** 用户挑选的主标题 */
-    selectMainTitle?: string
+    selectedMainTitle?: string
     /** 用户挑选的副标题 */
-    selectSubTitle?: string
+    selectedSubTitle?: string
     /** 用户追加的标题描述（可选） */
-    description?: string
+    userDescription?: string
   }
 
   type ArticleCreateRequest = {
