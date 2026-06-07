@@ -41,12 +41,11 @@
       </aside>
 
       <!-- 中间：主内容区 -->
-      <!-- 中间：主内容区 -->
       <main ref="mainContentRef" class="main-content">
         <!-- 阶段切换（带过渡动画） -->
         <Transition name="fade-slide" mode="out-in">
           <!-- 输入状态 -->
-          <div v-if="!isCreating && !isCompleted" class="input-state">
+          <div v-if="currentPhase === 'INPUT'" key="input" class="input-state">
             <div class="input-card">
               <div class="input-header">
                 <h1 class="input-title">创作新文章</h1>
@@ -243,7 +242,7 @@
             </div>
           </div>
           <!-- 创作完成 -->
-          <div v-if="isCompleted" class="completed-state">
+          <div v-else-if="isCompleted" class="completed-state">
             <div class="success-header">
               <CheckCircleFilled class="success-icon" />
               <span>文章创作完成！</span>
@@ -667,6 +666,7 @@ const handleSSEMessage = (msg: SSEMessage) => {
     case 'ARTICLE_OUTLINE_GENERATED':
       // 大纲生成完成，切换到编辑大纲阶段
       currentPhase.value = 'ARTICLE_OUTLINE_EDITING'
+      currentStep.value = 2
       outline.value = msg.outline || []
       isCreating.value = false
       isOutlineStreaming.value = false
@@ -680,7 +680,35 @@ const handleSSEMessage = (msg: SSEMessage) => {
       scrollToBottom()
       break
 
-    // ... 其他消息类型处理
+    case 'ARTICLE_CONTENT_AGENT_COMPLETE':
+      // 正文完成
+      isStreaming.value = false
+      currentStep.value = 3
+      break
+
+    case 'ARTICLE_IMAGE_REQUIREMENTS_AGENT_COMPLETE':
+      // 配图分析完成
+      currentStep.value = 4
+      totalImages.value = msg.imageRequirements?.length || 5
+      break
+
+    case 'IMAGE_COMPLETE':
+      // 单张配图完成
+      imageCount.value++
+      imageProgress.value = Math.round((imageCount.value / totalImages.value) * 100)
+      break
+
+    case 'ARTICLE_IMAGE_GENERATE_AGENT_COMPLETE':
+      // 所有配图完成
+      currentStep.value = 5
+      article.value.images = msg.images
+      break
+
+    case 'MERGE_COMPLETE':
+      // 图文合成完成
+      article.value.fullContent = msg.fullContent
+      scrollToBottom()
+      break
 
     case 'ALL_COMPLETE':
       // 全部完成
@@ -695,6 +723,7 @@ const handleSSEMessage = (msg: SSEMessage) => {
       errorVisible.value = true
       isCreating.value = false
       currentPhase.value = 'INPUT'
+      currentStep.value = 0
       break
   }
 }
