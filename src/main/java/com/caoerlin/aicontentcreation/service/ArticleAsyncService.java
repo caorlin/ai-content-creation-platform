@@ -24,4 +24,11 @@ public interface ArticleAsyncService {
      * @param style  风格
      */
     void executeArticleTitleGeneratePhage(String taskId, String topic, String style);
+
+    /**
+     * 文章大纲生成阶段
+     *
+     * @param taskId 任务id
+     */
+    void executeArticleOutlineGeneratePhage(String taskId);
 }

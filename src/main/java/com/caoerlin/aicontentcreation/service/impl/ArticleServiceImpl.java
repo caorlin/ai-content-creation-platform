@@ -352,7 +352,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         return modifyOutlineList;
     }
 
-    private Article getArticleByTaskId(String taskId) {
+    public Article getArticleByTaskId(String taskId) {
         if (StrUtil.isBlank(taskId)) {
             log.error("文章任务id为空");
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "任务id不能为空");

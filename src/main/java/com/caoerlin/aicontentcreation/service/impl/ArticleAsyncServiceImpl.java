@@ -2,10 +2,14 @@ package com.caoerlin.aicontentcreation.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.caoerlin.aicontentcreation.ai.agent.ArticleCreationAgent;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
+import com.caoerlin.aicontentcreation.common.exception.BusinessException;
+import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.manager.SseEmitterManager;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
+import com.caoerlin.aicontentcreation.model.entity.Article;
 import com.caoerlin.aicontentcreation.model.enums.ArticleCreatePhaseEnum;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
 import com.caoerlin.aicontentcreation.service.ArticleAgentService;
@@ -19,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.caoerlin.aicontentcreation.constant.ArticleConstant.*;
 
@@ -122,6 +127,69 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
 
             //推送失败消息
             sendSseMessage(taskId,SseMessageTypeEnum.ERROR,Map.of("message",e.getMessage()));
+
+            //完成
+            sseEmitterManager.complete(taskId);
+        }
+    }
+
+    @Override
+    public void executeArticleOutlineGeneratePhage(String taskId) {
+        log.info("文章大纲生成阶段：开始生成文章大纲,taskId={}", taskId);
+
+        if (StringUtils.isBlank(taskId)) {
+            log.error("文章任务id不能为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章任务id为空");
+        }
+
+        try {
+            Article article = articleService.getArticleByTaskId(taskId);
+            if (Objects.isNull(article)) {
+                log.error("文章信息不存在,taskId={}", taskId);
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章不存在");
+            }
+
+            //更新文章生成阶段状态
+            articleService.updatePhase(taskId, ArticleCreatePhaseEnum.OUTLINE_GENERATING);
+
+            //设置文章主状态
+            ArticleState state = new ArticleState();
+            state.setTaskId(taskId);
+            state.setStyle(article.getStyle());
+            state.setUserDescription(article.getUserDescription());
+
+            //设置文章标题
+            ArticleState.TitleResult titleResult = new ArticleState.TitleResult();
+            titleResult.setMainTitle(article.getMainTitle());
+            titleResult.setSubTitle(article.getSubTitle());
+            state.setTitle(titleResult);
+
+            articleAgentService.executeArticleOutlineGenerate(state, message -> {
+                handleAgentMessage(taskId, message, state);
+            });
+
+            //保存文章大纲
+            Article updateArticle = articleService.getArticleByTaskId(taskId);
+            updateArticle.setOutline(JSONUtil.toJsonStr(state.getOutline().getSections()));
+            articleService.updateById(updateArticle);
+
+            //更新文章阶段状态,文章大纲编辑中
+            articleService.updatePhase(taskId, ArticleCreatePhaseEnum.OUTLINE_EDITING);
+
+            //推送大纲生成完成
+            Map<String, Object> data = new HashMap<>();
+            data.put("outline", state.getOutline().getSections());
+            sendSseMessage(taskId, SseMessageTypeEnum.ARTICLE_OUTLINE_GENERATED, data);
+
+            log.info("文章大纲生成完成,taskId={},outlineSectionSize={}", taskId, state.getOutline().getSections().size());
+        } catch (BusinessException e) {
+            log.error("文章大纲生成完成,taskId={},e={}", taskId, e.getMessage());
+
+            //更新文章状态为失败
+            articleService.updateArticleStatus(taskId, ArticleStatusEnum.FAILED, e.getMessage());
+
+            //推送失败消息
+            sendSseMessage(taskId, SseMessageTypeEnum.ERROR, Map.of("message", e.getMessage()));
 
             //完成
             sseEmitterManager.complete(taskId);

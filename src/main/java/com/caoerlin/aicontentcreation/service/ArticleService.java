@@ -127,4 +127,9 @@ public interface ArticleService extends IService<Article> {
      */
     List<ArticleState.OutlineSection> aiModifyOutline(String taskId, String modifySuggestion, User loginUser);
 
+    /**
+     * 根据文章任务id获取文章信息
+     * @param taskId 文章任务id
+     */
+    Article getArticleByTaskId(String taskId);
 }

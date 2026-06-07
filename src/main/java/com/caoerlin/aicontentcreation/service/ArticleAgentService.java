@@ -12,4 +12,12 @@ public interface ArticleAgentService {
      * @param streamHandler 模型执行状态流转
      */
     void executeArticleTitleGeneratePhage(ArticleState state, Consumer<String> streamHandler);
+
+    /**
+     * 阶段2： 文章大纲生成
+     *
+     * @param state         文章状态
+     * @param streamHandler 模型执行状态流转
+     */
+    void executeArticleOutlineGenerate(ArticleState state, Consumer<String> streamHandler);
 }
