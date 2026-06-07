@@ -118,6 +118,8 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
             Map<String, Object> data = new HashMap<>();
             data.put("titleOptions", state.getTitleOptions());
             sendSseMessage(taskId, SseMessageTypeEnum.ARTICLE_TITLE_GENERATED, data);
+
+            log.info("文章标题列表生成完成,taskId={},titleOptionsSize={}", taskId, state.getTitleOptions().size());
         } catch (Exception e) {
             log.error("异步生成文章标题阶段执行失败,taskId={},e={}", taskId, e.getMessage());
 
