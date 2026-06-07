@@ -31,4 +31,10 @@ public interface ArticleAsyncService {
      * @param taskId 任务id
      */
     void executeArticleOutlineGeneratePhage(String taskId);
+
+    /**
+     * 文章正文生成阶段,包括文章
+     * @param taskId
+     */
+    void executeArticleContentGeneratePhage(String taskId);
 }

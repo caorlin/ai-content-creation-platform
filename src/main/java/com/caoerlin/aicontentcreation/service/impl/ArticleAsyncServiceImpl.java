@@ -1,6 +1,7 @@
 package com.caoerlin.aicontentcreation.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.caoerlin.aicontentcreation.ai.agent.ArticleCreationAgent;
@@ -20,10 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.caoerlin.aicontentcreation.constant.ArticleConstant.*;
 
@@ -127,7 +125,7 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
             articleService.updateArticleStatus(taskId, ArticleStatusEnum.FAILED, e.getMessage());
 
             //推送失败消息
-            sendSseMessage(taskId,SseMessageTypeEnum.ERROR,Map.of("message",e.getMessage()));
+            sendSseMessage(taskId, SseMessageTypeEnum.ERROR, Map.of("message", e.getMessage()));
 
             //完成
             sseEmitterManager.complete(taskId);
@@ -186,6 +184,74 @@ public class ArticleAsyncServiceImpl implements ArticleAsyncService {
             log.info("文章大纲生成完成,taskId={},outlineSectionSize={}", taskId, state.getOutline().getSections().size());
         } catch (BusinessException e) {
             log.error("文章大纲生成失败,taskId={},e={}", taskId, e.getMessage());
+
+            //更新文章状态为失败
+            articleService.updateArticleStatus(taskId, ArticleStatusEnum.FAILED, e.getMessage());
+
+            //推送失败消息
+            sendSseMessage(taskId, SseMessageTypeEnum.ERROR, Map.of("message", e.getMessage()));
+
+            //完成
+            sseEmitterManager.complete(taskId);
+        }
+    }
+
+    @Override
+    @Async("articleExecutor")
+    public void executeArticleContentGeneratePhage(String taskId) {
+        log.info("开始执行文章正文生成阶段,taskId={}", taskId);
+
+        try {
+            //获取文章信息
+            Article article = articleService.getArticleByTaskId(taskId);
+            if (Objects.isNull(article)) {
+                log.info("文章不存在,taskId={}", taskId);
+                throw new BusinessException(ErrorCode.PARAMS_ERROR, "文章不存在");
+            }
+
+            //设置文章状态
+            ArticleState state = new ArticleState();
+            state.setTaskId(taskId);
+            state.setStyle(article.getStyle());
+
+            //获取文章配图方案
+            String imageMethods = article.getEnabledImageMethods();
+            //设置文章配图方案
+            List<String> imageMethodList = new ArrayList<>();
+            if (StrUtil.isNotBlank(imageMethods)) {
+                imageMethodList = JSONUtil.toList(imageMethods, String.class);
+            }
+            state.setEnabledImageMethods(imageMethodList);
+
+            //设置文章标题
+            ArticleState.TitleResult titleResult = new ArticleState.TitleResult();
+            titleResult.setMainTitle(article.getMainTitle());
+            titleResult.setSubTitle(article.getSubTitle());
+            state.setTitle(titleResult);
+
+            //设置文章大纲
+            ArticleState.OutlineResult outlineResult = new ArticleState.OutlineResult();
+            outlineResult.setSections(JSONUtil.toList(article.getOutline(), ArticleState.OutlineSection.class));
+            state.setOutline(outlineResult);
+
+            //生成文章正文和配图
+            articleAgentService.executeArticleContentAndImage(state, message -> {
+                handleAgentMessage(taskId, message, state);
+            });
+
+            //保存文章正文到数据库
+            articleService.saveArticleContent(taskId, state);
+
+            //更新文章状态为已完成
+            articleService.updateArticleStatus(taskId, ArticleStatusEnum.COMPLETED, "");
+
+            //发送完成消息
+            sendSseMessage(taskId, SseMessageTypeEnum.ALL_COMPLETE, Map.of("taskId", taskId));
+
+            //完成sse连接
+            sseEmitterManager.complete(taskId);
+        } catch (BusinessException e) {
+            log.error("生成文章正文和配图失败,taskId={},e={}", taskId, e.getMessage());
 
             //更新文章状态为失败
             articleService.updateArticleStatus(taskId, ArticleStatusEnum.FAILED, e.getMessage());
