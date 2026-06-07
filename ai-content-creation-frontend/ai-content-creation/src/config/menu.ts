@@ -1,5 +1,5 @@
 import type { MenuProps } from 'ant-design-vue'
-import { BulbTwoTone, HomeTwoTone } from '@ant-design/icons-vue'
+import { BulbTwoTone, HomeTwoTone, ProfileTwoTone } from '@ant-design/icons-vue'
 import { h } from 'vue'
 
 export const headerMenuItems: MenuProps['items'] = [
@@ -17,7 +17,7 @@ export const headerMenuItems: MenuProps['items'] = [
   },
   {
     key: '/article/list',
-    icon: () => h(BulbTwoTone),
+    icon: () => h(ProfileTwoTone),
     label: '创作历史',
     title: '创作历史',
   },
