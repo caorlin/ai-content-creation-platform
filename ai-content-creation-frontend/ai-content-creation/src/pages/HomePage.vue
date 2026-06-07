@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser'
@@ -26,10 +26,15 @@ const recentArticles = ref<API.ArticleVO[]>([])
 const loadingArticles = ref(false)
 
 const goToCreate = () => {
+  // 检查是否已登录，未登录则跳转到登录页
+  if (!loginUserStore.loginUser.id) {
+    router.push({ path: '/user/login', query: { redirect: '/article/create' } })
+    return
+  }
   if (topic.value.trim()) {
-    router.push({ path: '/create', query: { topic: topic.value } })
+    router.push({ path: '/article/create', query: { topic: topic.value } })
   } else {
-    router.push('/create')
+    router.push('/article/create')
   }
 }
 
