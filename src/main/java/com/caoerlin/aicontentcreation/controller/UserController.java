@@ -32,7 +32,7 @@ import static com.caoerlin.aicontentcreation.constant.UserConstant.DEFAULT_PASSW
  * @author zyj
  */
 @RestController
-@Tag(name = "用户模块")
+@Tag(name = "UserController",description = "用户模块接口")
 @RequestMapping("user")
 @RequiredArgsConstructor
 public class UserController {

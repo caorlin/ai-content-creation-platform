@@ -35,7 +35,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@Tag(name = "文章管理接口")
+@Tag(name = "ArticleController",description = "文章管理接口")
 @RequestMapping("article")
 @RequiredArgsConstructor
 public class ArticleController {
