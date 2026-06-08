@@ -5,6 +5,7 @@ import UserRegisterPage from "@/pages/user/UserRegisterPage.vue"
 import UserManagePage from "@/pages/admin/UserManagePage.vue"
 import ArticleCreatePage from "@/pages/article/ArticleCreatePage.vue"
 import ArticleListPage from "@/pages/article/ArticleListPage.vue"
+import VipPage from "@/pages/VipPage.vue"
 import ArticleDetailPage from "@/pages/article/ArticleDetailPage.vue"
 
 const router = createRouter({
@@ -41,6 +42,11 @@ const router = createRouter({
       component: ArticleListPage,
     },
     {
+      path: "/vip",
+      name: "VIP会员",
+      component: VipPage,
+    },
+    {
       path: "/article/detail/:taskId",
       name: "文章详情",
       component: ArticleDetailPage,
@@ -49,3 +55,4 @@ const router = createRouter({
 })
 
 export default router
+

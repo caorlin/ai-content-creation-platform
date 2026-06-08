@@ -1,9 +1,9 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { type MenuProps, message } from 'ant-design-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
-import { LogoutOutlined } from '@ant-design/icons-vue'
+import { LogoutOutlined, CrownOutlined } from '@ant-design/icons-vue'
 import { userLogout } from '@/api/userController.ts'
 import { headerMenuItems } from '@/config/menu.ts'
 
@@ -67,6 +67,10 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
     />
 
     <div class="user-login-status">
+      <RouterLink v-if="loginUserStore.loginUser.userRole !== 'admin'" to="/vip" class="vip-link">
+        <CrownOutlined />
+        <span>升级会员</span>
+      </RouterLink>
       <div v-if="loginUserStore.loginUser.id">
         <a-dropdown>
           <a-space class="user-info">
@@ -149,6 +153,30 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+.vip-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-primary);
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.vip-link:hover {
+  background: var(--bg-primary-hover);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
+  color: #fff;
 }
 
 .user-info {

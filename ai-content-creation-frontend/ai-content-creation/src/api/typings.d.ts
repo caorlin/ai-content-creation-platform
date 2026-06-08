@@ -1,4 +1,4 @@
-declare namespace API {
+﻿declare namespace API {
   type addUserParams = {
     userAddRequest: UserAddRequest
   }
@@ -175,6 +175,8 @@ declare namespace API {
     createTime?: string
     /** 更新时间 */
     updateTime?: string
+    /** VIP 到期时间 */
+    vipTime?: string
   }
 
   type OrderItem = {
@@ -338,3 +340,4 @@ declare namespace API {
     createTime?: string
   }
 }
+
