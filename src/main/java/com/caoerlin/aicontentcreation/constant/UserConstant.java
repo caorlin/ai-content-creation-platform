@@ -35,4 +35,9 @@ public interface UserConstant {
      * 默认密码
      */
     String DEFAULT_PASSWORD = "12345678";
+
+    /**
+     * 用户 vip 角色标识
+     */
+    String VIP_ROLE = "vip";
 }
