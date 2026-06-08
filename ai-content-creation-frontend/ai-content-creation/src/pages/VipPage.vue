@@ -132,7 +132,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { message } from 'ant-design-vue'
+import { message, Modal } from 'ant-design-vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser'
 import { createVipPaymentRecord } from '@/api/paymentController'
@@ -226,12 +226,17 @@ onMounted(async () => {
   const { success, cancel } = route.query
   if (success === 'true') {
     await loginUserStore.fetchLoginUser()
-    message.success('支付成功！您已是永久会员，尽情享受全部特权吧')
+    Modal.success({
+      title: '支付成功！',
+      content: '恭喜您成为永久会员，已解锁全部高级功能！',
+      okText: '开始创作',
+      onOk: () => {
+        router.push('/create')
+      },
+    })
+    router.replace('/vip')
   } else if (cancel === 'true') {
     message.info('支付已取消')
-  }
-  // 清除 URL 参数，保持地址栏整洁
-  if (success || cancel) {
     router.replace({ path: '/vip' })
   }
 })
