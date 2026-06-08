@@ -6,7 +6,6 @@ import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.common.response.BaseResponse;
 import com.caoerlin.aicontentcreation.common.response.ResultUtils;
 import com.caoerlin.aicontentcreation.constant.UserConstant;
-import com.caoerlin.aicontentcreation.model.entity.PaymentRecord;
 import com.caoerlin.aicontentcreation.model.vo.payment.PaymentRecordVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 import com.caoerlin.aicontentcreation.service.PaymentRecordService;
