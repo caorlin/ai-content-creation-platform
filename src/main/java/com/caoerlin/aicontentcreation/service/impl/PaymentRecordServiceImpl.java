@@ -1,5 +1,6 @@
 package com.caoerlin.aicontentcreation.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,6 +15,7 @@ import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.PaymentStatusEnum;
 import com.caoerlin.aicontentcreation.model.enums.ProductTypeEnum;
 import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
+import com.caoerlin.aicontentcreation.model.vo.payment.PaymentRecordVO;
 import com.caoerlin.aicontentcreation.service.PaymentRecordService;
 import com.caoerlin.aicontentcreation.mapper.PaymentRecordMapper;
 import com.stripe.exception.StripeException;
@@ -47,6 +49,7 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 
     private final StripeConfig stripeConfig;
     private final UserMapper userMapper;
+    private final PaymentRecordMapper paymentRecordMapper;
 
     @Override
     public String createVipPaymentSession(Long userId) throws StripeException {
@@ -136,8 +139,19 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 
 
     @Override
-    public List<PaymentRecord> getPaymentList(Long userId) {
-        return List.of();
+    public List<PaymentRecordVO> getPaymentList(Long userId) {
+        if (ObjectUtil.isEmpty(userId)) {
+            log.warn("用户id不能为空");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户id不能为空");
+        }
+
+        LambdaQueryWrapper<PaymentRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(PaymentRecord::getUserId, userId);
+        return paymentRecordMapper.selectList(wrapper).stream().map(paymentRecord -> {
+            PaymentRecordVO paymentRecordVO = new PaymentRecordVO();
+            BeanUtil.copyProperties(paymentRecordVO, paymentRecord);
+            return paymentRecordVO;
+        }).toList();
     }
 
     /**

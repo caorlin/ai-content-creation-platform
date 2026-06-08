@@ -2,6 +2,7 @@ package com.caoerlin.aicontentcreation.service;
 
 import com.caoerlin.aicontentcreation.model.entity.PaymentRecord;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.caoerlin.aicontentcreation.model.vo.payment.PaymentRecordVO;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
@@ -53,5 +54,5 @@ public interface PaymentRecordService extends IService<PaymentRecord> {
      * @param userId 用户id
      * @return 用户支付列表
      */
-    List<PaymentRecord> getPaymentList(Long userId);
+    List<PaymentRecordVO> getPaymentList(Long userId);
 }
