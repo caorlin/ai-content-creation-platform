@@ -1,4 +1,4 @@
-﻿declare namespace API {
+declare namespace API {
   type addUserParams = {
     userAddRequest: UserAddRequest
   }
@@ -81,6 +81,12 @@
   type BaseResponseListOutlineSection = {
     code?: number
     data?: OutlineSection[]
+    message?: string
+  }
+
+  type BaseResponseListPaymentRecordVO = {
+    code?: number
+    data?: PaymentRecordVO[]
     message?: string
   }
 
@@ -210,6 +216,40 @@
     pages?: number
   }
 
+  type PaymentRecordVO = {
+    /** 主键 */
+    id?: number
+    /** 主键 */
+    userId?: number
+    /** Stripe Checkout Session ID */
+    stripeSessionId?: string
+    /** Stripe 支付意向ID */
+    stripePaymentIntentId?: string
+    /** 金额（美元） */
+    amount?: number
+    /** 货币 */
+    currency?: string
+    /** 状态 */
+    status?: string
+    /** 产品类型 */
+    productType?: string
+    /** 描述 */
+    description?: string
+    /** 退款时间 */
+    refundTime?: string
+    /** 退款原因 */
+    refundReason?: string
+    /** 创建时间 */
+    createTime?: string
+    /** 更新时间 */
+    updateTime?: string
+  }
+
+  type refundParams = {
+    /** 退款原因 */
+    reason?: string
+  }
+
   type SseEmitter = {
     timeout?: number
   }
@@ -226,6 +266,7 @@
     createTime?: string
     updateTime?: string
     isDelete?: number
+    vipTime?: string
   }
 
   type UserAddRequest = {
