@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS payment_record (
     id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键',
     user_id BIGINT NOT NULL COMMENT '用户ID',
     stripe_session_id VARCHAR(128) COMMENT 'Stripe Checkout Session ID',
-    stripe_payment_intentId VARCHAR(128) COMMENT 'Stripe 支付意向ID',
+    stripe_payment_intent_id VARCHAR(128) COMMENT 'Stripe 支付意向ID',
     amount DECIMAL(10,2) NOT NULL COMMENT '金额（美元）',
     currency VARCHAR(8) DEFAULT 'usd' COMMENT '货币',
     status VARCHAR(32) NOT NULL COMMENT '状态：PENDING/SUCCEEDED/FAILED/REFUNDED',
