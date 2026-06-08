@@ -60,9 +60,7 @@
           <!-- 右侧：会员特权列表 -->
           <div class="privileges-card">
             <div class="privileges-header">
-              <h3 class="privileges-title">
-                <GiftOutlined /> 会员专属特权
-              </h3>
+              <h3 class="privileges-title"><GiftOutlined /> 会员专属特权</h3>
               <p class="privileges-subtitle">对比免费版，VIP 会员拥有以下专属能力</p>
             </div>
 
@@ -73,17 +71,11 @@
                   <span class="plan-label free-label">免费版</span>
                 </div>
                 <div class="compare-cell compare-cell-plan">
-                  <span class="plan-label vip-label">
-                    <CrownOutlined /> VIP
-                  </span>
+                  <span class="plan-label vip-label"> <CrownOutlined /> VIP </span>
                 </div>
               </div>
 
-              <div
-                v-for="(item, index) in privilegeList"
-                :key="index"
-                class="compare-row"
-              >
+              <div v-for="(item, index) in privilegeList" :key="index" class="compare-row">
                 <div class="compare-cell compare-cell-feature">
                   <span class="feature-name">{{ item.name }}</span>
                   <a-tooltip v-if="item.tip" :title="item.tip">
@@ -153,6 +145,7 @@ import {
   CloseOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons-vue'
+import { USER_ROLE_VIP } from '@/constant/user.ts'
 
 const router = useRouter()
 const route = useRoute()
@@ -162,9 +155,7 @@ const loadingBuy = ref(false)
 
 /** 判断当前用户是否为 VIP */
 const isVip = computed(() => {
-  const vipTime = loginUserStore.loginUser.vipTime
-  if (!vipTime) return false
-  return new Date(vipTime).getTime() > Date.now()
+  return loginUserStore.loginUser.userRole === USER_ROLE_VIP
 })
 
 const privilegeList = [
@@ -214,23 +205,19 @@ const faqList = [
   },
   {
     question: '购买后可以退款吗？',
-    answer:
-      '永久会员支持 7 天内无忧退款。退款后会员权益将立即失效，已使用的创作额度不予退还。',
+    answer: '永久会员支持 7 天内无忧退款。退款后会员权益将立即失效，已使用的创作额度不予退还。',
   },
   {
     question: 'VIP 会员到期后会怎样？',
-    answer:
-      '永久会员一次购买终身有效，无需续费，不会过期。',
+    answer: '永久会员一次购买终身有效，无需续费，不会过期。',
   },
   {
     question: 'VIP 会员可以在多台设备上使用吗？',
-    answer:
-      '可以。VIP 会员权益与您的账号绑定，您可以在任意设备上登录使用，无需重复购买。',
+    answer: '可以。VIP 会员权益与您的账号绑定，您可以在任意设备上登录使用，无需重复购买。',
   },
   {
     question: '如何查看我的会员状态？',
-    answer:
-      '登录后，您可以在个人中心页面查看会员状态和消费记录。如有疑问可随时联系客服。',
+    answer: '登录后，您可以在个人中心页面查看会员状态和消费记录。如有疑问可随时联系客服。',
   },
 ]
 
