@@ -1,5 +1,5 @@
-﻿﻿﻿<template>
-  <div id="userLoginPage">
+﻿<template>
+  <div :id="modal ? undefined : 'userLoginPage'" :class="{ 'modal-mode': modal }">
     <div class="form-card">
       <h2 class="form-title">欢迎回来</h2>
 
@@ -39,15 +39,19 @@
 
       <div class="form-footer">
         <span>还没有账号？</span>
-        <RouterLink to="/user/register" class="register-link">立即注册</RouterLink>
+        <a v-if="modal" class="register-link" @click="emit('switchToRegister')">立即注册</a>
+        <RouterLink v-else to="/user/register" class="register-link">立即注册</RouterLink>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+
+const props = defineProps<{ modal?: boolean }>()
+const emit = defineEmits<{ (e: 'success'): void; (e: 'switchToRegister'): void }>()
 import { userLogin } from '@/api/userController.js'
 import { message } from 'ant-design-vue'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
@@ -67,6 +71,10 @@ const handleSubmit = async (values: any) => {
   if (res.data.code === 0 && res.data.data) {
     await loginUserStore.fetchLoginUser()
     message.success('登录成功')
+    if (props.modal) {
+      emit('success')
+      return
+    }
     const redirect = route.query.redirect as string
     router.push({
       path: redirect || '/',
@@ -153,5 +161,17 @@ const handleSubmit = async (values: any) => {
 .register-link:hover {
   opacity: 0.8;
   text-decoration: underline;
+}
+
+.modal-mode {
+  display: block;
+  min-height: auto;
+  padding: 0;
+  background: none;
+}
+
+.modal-mode .form-card {
+  box-shadow: none;
+  padding: 0;
 }
 </style>

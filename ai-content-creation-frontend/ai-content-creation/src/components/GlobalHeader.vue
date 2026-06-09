@@ -1,20 +1,29 @@
-﻿﻿﻿﻿<script setup lang="ts">
+﻿<script setup lang="ts">
 import { type MenuProps, message } from 'ant-design-vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
 import { USER_ROLE_ADMIN, USER_ROLE_USER, USER_ROLE_VIP } from '@/constant/user.ts'
 import { LogoutOutlined, CrownOutlined } from '@ant-design/icons-vue'
+import AuthModal from '@/components/AuthModal.vue'
 import { userLogout } from '@/api/userController.ts'
 import { headerMenuItems } from '@/config/menu.ts'
 
 const router = useRouter()
 const route = useRoute()
 
+const authModalVisible = ref(false)
+
 const selectedKeys = computed(() => [route.path])
 
 const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
-  router.push(String(key))
+  const keyStr = String(key)
+  // 创作历史需要登录
+  if (keyStr === '/article/list' && !loginUserStore.loginUser.id) {
+    authModalVisible.value = true
+    return
+  }
+  router.push(keyStr)
 }
 // JS 中引入 Store
 const loginUserStore = useLoginUserStore()
@@ -101,8 +110,9 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
         </a-dropdown>
       </div>
       <div v-else>
-        <a-button type="primary" href="/user/login">登录</a-button>
+        <a-button type="primary" @click="authModalVisible = true">登录</a-button>
       </div>
+      <AuthModal v-model:visible="authModalVisible" />
     </div>
   </a-layout-header>
 </template>
