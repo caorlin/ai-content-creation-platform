@@ -102,7 +102,7 @@
                       class="style-option"
                       :class="{ active: enabledImageMethods.includes(`NANO_BANANA`) }"
                     >
-                      <a-checkbox value="NANO_BANANA">Nano Banana</a-checkbox>
+                      <a-checkbox value="NANO_BANANA" :disabled="!isVipOrAdmin">Nano Banana<span v-if="!isVipOrAdmin" class="vip-icon">VIP</span></a-checkbox>
                     </div>
                     <div
                       class="style-option"
@@ -126,7 +126,7 @@
                       class="style-option"
                       :class="{ active: enabledImageMethods.includes(`SVG_DIAGRAM`) }"
                     >
-                      <a-checkbox value="SVG_DIAGRAM">SVG</a-checkbox>
+                      <a-checkbox value="SVG_DIAGRAM" :disabled="!isVipOrAdmin">SVG<span v-if="!isVipOrAdmin" class="vip-icon">VIP</span></a-checkbox>
                     </div>
                   </a-checkbox-group>
                 </div>
@@ -424,9 +424,13 @@ import {
 } from '@ant-design/icons-vue'
 import OutlineEditingStage from '@/pages/article/components/OutlineEditingStage.vue'
 import TitleSelectingStage from '@/pages/article/components/TitleSelectingStage.vue'
+import { useLoginUserStore } from '@/stores/loginUser'
 
 const router = useRouter()
 const route = useRoute()
+
+const loginUserStore = useLoginUserStore()
+const isVipOrAdmin = computed(() => ['vip', 'admin'].includes(loginUserStore.loginUser.userRole || ''))
 
 // 智能体步骤（对应后端 6 个步骤）
 const agentSteps = [
@@ -574,6 +578,12 @@ const startCreate = async () => {
       style: style.value,
       enabledImageMethods: enabledImageMethods.value,
     })
+
+    // 检查后端返回的错误码，失败时不建立 SSE 连接
+    if (res.data.code !== 0) {
+      throw new Error(res.data.message || '创建任务失败')
+    }
+
     taskId.value = res.data.data
 
     // 建立 SSE 连接
