@@ -1,4 +1,4 @@
-﻿<template>
+﻿﻿<template>
   <div class="outline-editing-stage">
     <div class="stage-header">
       <h2 class="stage-title">编辑文章大纲</h2>
@@ -55,7 +55,8 @@
       </div>
     </div>
 
-    <div class="ai-chat-section">
+    <!-- AI 修改大纲：VIP/管理员可用 -->
+    <div v-if="isVipOrAdmin" class="ai-chat-section">
       <div class="chat-header">
         <RobotOutlined />
         <span>AI 助手修改大纲</span>
@@ -83,6 +84,20 @@
           AI 修改大纲
         </a-button>
       </div>
+    </div>
+
+    <!-- 非VIP用户：升级提示卡片 -->
+    <div v-else class="ai-upgrade-card">
+      <div class="upgrade-card-header">
+        <CrownOutlined class="upgrade-crown-icon" />
+        <span>AI 修改大纲</span>
+        <span class="upgrade-vip-tag">VIP</span>
+      </div>
+      <p class="upgrade-card-desc">AI 智能分析您的修改建议，自动优化大纲结构和内容，让创作更高效</p>
+      <a-button type="primary" class="upgrade-card-btn" @click="router.push('/vip')">
+        <CrownOutlined />
+        升级会员解锁
+      </a-button>
     </div>
 
     <div class="actions">
@@ -114,6 +129,16 @@
 import { computed, nextTick, onMounted, ref } from 'vue'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
+import { useLoginUserStore } from '@/stores/loginUser'
+import { USER_ROLE_ADMIN, USER_ROLE_VIP } from '@/constant/user'
+import {
+  CrownOutlined,
+  RobotOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+  CheckOutlined,
+} from '@ant-design/icons-vue'
+import { useRouter } from 'vue-router'
 import { aiModifyOutline } from '@/api/articleController.ts'
 
 interface OutlineSection {
@@ -131,6 +156,12 @@ interface Props {
 interface Emits {
   (e: 'confirm', outline: OutlineSection[]): void
 }
+
+const router = useRouter()
+const loginUserStore = useLoginUserStore()
+const isVipOrAdmin = computed(() =>
+  [USER_ROLE_ADMIN, USER_ROLE_VIP].includes(loginUserStore.loginUser.userRole || ''),
+)
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
@@ -484,5 +515,59 @@ const handleAiModify = async () => {
 .confirm-btn:not(:disabled):hover {
   box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
   transform: translateY(-1px);
+}
+
+/* AI 升级提示卡片 */
+.ai-upgrade-card {
+  margin-top: 24px;
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.upgrade-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 12px;
+}
+
+.upgrade-crown-icon {
+  color: var(--color-primary);
+  font-size: 20px;
+}
+
+.upgrade-vip-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+}
+
+.upgrade-card-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0 0 20px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.upgrade-card-btn {
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  padding: 0 24px;
 }
 </style>
