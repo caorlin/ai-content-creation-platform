@@ -1,4 +1,4 @@
-﻿﻿﻿<template>
+﻿﻿﻿﻿<template>
   <div class="article-create-page">
     <!-- 三栏布局容器 -->
     <div class="create-layout">
@@ -281,12 +281,18 @@
 
           <!-- 管理员 -->
           <div v-if="isAdmin" class="quota-card quota-card-admin">
+            <div class="quota-card-icon">
+              <SafetyCertificateOutlined />
+            </div>
             <span class="quota-badge admin">管理员</span>
             <span class="quota-value">无限次</span>
           </div>
 
           <!-- VIP -->
           <div v-else-if="isVip" class="quota-card quota-card-vip">
+            <div class="quota-card-icon">
+              <CrownOutlined />
+            </div>
             <span class="quota-badge vip">VIP 会员</span>
             <span class="quota-value">无限次</span>
           </div>
@@ -468,6 +474,7 @@ import {
   RedoOutlined,
   BarChartOutlined,
   CrownOutlined,
+  SafetyCertificateOutlined,
 } from '@ant-design/icons-vue'
 import OutlineEditingStage from '@/pages/article/components/OutlineEditingStage.vue'
 import TitleSelectingStage from '@/pages/article/components/TitleSelectingStage.vue'
@@ -1535,22 +1542,50 @@ onBeforeUnmount(() => {
 }
 
 .quota-card {
-  padding: 16px;
+  padding: 20px 16px;
   border-radius: var(--radius-md);
   text-align: center;
+  overflow: hidden;
+  position: relative;
 }
 
+/* 管理员卡片 - 绿色 */
 .quota-card-admin {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 2px 12px rgba(34, 197, 94, 0.2);
 }
 
+/* VIP 卡片 - 尊贵金色 */
 .quota-card-vip {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 2px 12px rgba(245, 158, 11, 0.25);
 }
 
+.quota-card-vip::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* 普通用户卡片 - 浅色系 */
 .quota-card-normal {
-  background: var(--color-background-secondary);
+  background: var(--color-background);
   border: 1px solid var(--color-border-light);
+}
+
+.quota-card-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.quota-card-normal .quota-card-icon {
+  display: none;
 }
 
 .quota-badge {
@@ -1560,15 +1595,18 @@ onBeforeUnmount(() => {
   font-size: 11px;
   font-weight: 600;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
 
   &.admin {
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
   }
 
   &.vip {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
     color: white;
+    letter-spacing: 0.5px;
   }
 }
 
@@ -1577,6 +1615,8 @@ onBeforeUnmount(() => {
   font-size: 15px;
   font-weight: 600;
   color: white;
+  position: relative;
+  z-index: 1;
 }
 
 .quota-header {
