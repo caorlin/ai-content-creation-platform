@@ -69,7 +69,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         article.setUserId(loginUser.getId());
         article.setTopic(topic);
         article.setStyle(style);
-        article.setEnabledImageMethods(JSONUtil.toJsonStr(CollectionUtil.isNotEmpty(enableImageMethods) ? enableImageMethods : null));
+        article.setEnabledImageMethods(JSONUtil.toJsonStr(CollectionUtil.isNotEmpty(findImageMethods) ? findImageMethods : null));
 
         log.info("创建文章任务接口,创建文章开始保存文章任务,taskId={},userAccount={}", taskId, loginUser.getUserAccount());
         boolean result = save(article);
