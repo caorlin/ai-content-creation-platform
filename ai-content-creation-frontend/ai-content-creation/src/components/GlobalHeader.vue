@@ -44,6 +44,7 @@ const doLogout = async () => {
       username: '未登录',
     })
     message.success('退出登录成功')
+    router.push('/')
   } else {
     message.error('退出登录失败，' + res.data.message)
   }
