@@ -17,10 +17,7 @@ import com.caoerlin.aicontentcreation.model.dto.article.ArticleQueryRequest;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.entity.Article;
 import com.caoerlin.aicontentcreation.model.entity.User;
-import com.caoerlin.aicontentcreation.model.enums.ArticleCreatePhaseEnum;
-import com.caoerlin.aicontentcreation.model.enums.ArticleStatusEnum;
-import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
-import com.caoerlin.aicontentcreation.model.enums.UserRoleEnum;
+import com.caoerlin.aicontentcreation.model.enums.*;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 import com.caoerlin.aicontentcreation.service.ArticleService;
@@ -60,6 +57,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             log.error("创建文章任务接口,未知的文章风格,style={}", style);
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "未知的文章风格");
         }
+        //判断用户是否选择了配套方式，未选择使用默认的图片检索方式
+        List<String> findImageMethods = processImageMethods(enableImageMethods, loginUser);
+        validateImageMethods(findImageMethods, loginUser);
 
         //生成文章任务id
         String taskId = IdUtil.simpleUUID();
@@ -424,6 +424,58 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             log.error("文章现阶段：{},不允许用户执行{}阶段的操作", articleCreatePhaseEnum, userConfirmPhage);
             throw new BusinessException(ErrorCode.OPERATION_ERROR, "当前不允许此操作");
         }
+    }
+
+    /**
+     * 获取图片生成方式，未选择返回默认的
+     */
+    private List<String> processImageMethods(List<String> enableImageMethods, User loginUser) {
+        if (CollectionUtil.isNotEmpty(enableImageMethods)) {
+            return enableImageMethods;
+        }
+
+        //vip用户和管理员，返回空,再图片检索使用权限校验中直接放行
+        if (isVip(loginUser) || isAdmin(loginUser)) {
+            return null;
+        }
+
+        //返回默认使用的类型
+        return List.of(
+                ImageMethodEnum.PEXELS.getName(),
+                ImageMethodEnum.MERMAID.getName(),
+                ImageMethodEnum.ICONIFY.getName(),
+                ImageMethodEnum.EMOJI_PACK.getName()
+        );
+    }
+
+    private void validateImageMethods(List<String> findImageMethods, User loginUser) {
+        if (CollectionUtil.isEmpty(findImageMethods)) {
+            return;
+        }
+
+        //管理员和vip无限制
+        if (isAdmin(loginUser) || isVip(loginUser)) {
+            return;
+        }
+
+        //限制普通用户使用SVG_DIAGRAM和NANO_BANANA
+        List<String> list = findImageMethods.stream().filter(method ->
+                        StrUtil.equals(method, ImageMethodEnum.NANO_BANANA.getName())
+                                || StrUtil.equals(method, ImageMethodEnum.SVG_DIAGRAM.getName())
+                )
+                .toList();
+
+        if (CollectionUtil.isNotEmpty(list)) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "nano banana AI 生图和 SVG 概念图仅限 VIP 用户使用");
+        }
+    }
+
+    private boolean isAdmin(User loginUser) {
+        return StrUtil.equals(loginUser.getUserRole(), UserRoleEnum.ADMIN.getValue());
+    }
+
+    private boolean isVip(User loginUser) {
+        return StrUtil.equals(loginUser.getUserRole(), UserRoleEnum.VIP.getValue());
     }
 }
 
