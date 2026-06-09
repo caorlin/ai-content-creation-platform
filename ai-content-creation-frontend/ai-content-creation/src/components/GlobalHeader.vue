@@ -1,8 +1,9 @@
-﻿<script setup lang="ts">
+﻿﻿﻿﻿<script setup lang="ts">
 import { type MenuProps, message } from 'ant-design-vue'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoginUserStore } from '@/stores/loginUser.ts'
+import { USER_ROLE_ADMIN, USER_ROLE_USER, USER_ROLE_VIP } from '@/constant/user.ts'
 import { LogoutOutlined, CrownOutlined } from '@ant-design/icons-vue'
 import { userLogout } from '@/api/userController.ts'
 import { headerMenuItems } from '@/config/menu.ts'
@@ -17,6 +18,14 @@ const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
 }
 // JS 中引入 Store
 const loginUserStore = useLoginUserStore()
+
+const roleLabel = computed(() => {
+  const role = loginUserStore.loginUser.userRole
+  if (role === USER_ROLE_ADMIN) return '管理员'
+  if (role === USER_ROLE_VIP) return 'VIP'
+  return '升级会员'
+})
+const isRegularUser = computed(() => loginUserStore.loginUser.userRole === USER_ROLE_USER || !loginUserStore.loginUser.userRole)
 
 // 用户注销
 const doLogout = async () => {
@@ -67,10 +76,14 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
     />
 
     <div class="user-login-status">
-      <RouterLink v-if="loginUserStore.loginUser.userRole !== 'admin'" to="/vip" class="vip-link">
+      <RouterLink v-if="isRegularUser" to="/vip" class="vip-link">
         <CrownOutlined />
         <span>升级会员</span>
       </RouterLink>
+      <span v-else-if="loginUserStore.loginUser.id" class="vip-badge">
+        <CrownOutlined />
+        <span>{{ roleLabel }}</span>
+      </span>
       <div v-if="loginUserStore.loginUser.id">
         <a-dropdown>
           <a-space class="user-info">
@@ -177,6 +190,20 @@ const menuItems = computed<MenuProps['items']>(() => filterMenus(originItems))
   background: var(--bg-primary-hover);
   box-shadow: 0 6px 20px rgba(14, 165, 233, 0.35);
   color: #fff;
+}
+
+.vip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1890ff;
+  background: var(--color-background);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-background);
+  line-height: 1.5;
 }
 
 .user-info {
