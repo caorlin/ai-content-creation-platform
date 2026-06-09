@@ -25,4 +25,6 @@ public class LoginUserVO implements Serializable {
     private LocalDateTime createTime;
     @Schema(description = "更新时间")
     private LocalDateTime updateTime;
+    @Schema(description = "用户使用配额")
+    private Integer quota;
 }
