@@ -25,9 +25,11 @@ import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
 import com.caoerlin.aicontentcreation.service.ArticleService;
 import com.caoerlin.aicontentcreation.mapper.ArticleMapper;
+import com.caoerlin.aicontentcreation.service.QuotaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,9 +45,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         implements ArticleService {
     private final ArticleMapper articleMapper;
     private final ArticleOutlineAgent articleOutlineAgent;
+    private final QuotaService quotaService;
 
     @Override
-    public String createArticleTask(String topic, String style, List<String> enableImageMethods, LoginUserVO loginUser) {
+    public String createArticleTask(String topic, String style, List<String> enableImageMethods, User loginUser) {
         log.info("开始执行创建文章任务接口");
 
         if (StrUtil.isBlank(topic)) {
@@ -361,6 +364,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Article::getTaskId, taskId);
         return getOne(wrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String createArticleTaskWithCheckQuota(String topic, String style, List<String> enableImageMethods, User loginUser) {
+        //先检查并且扣除配额后再创建文章
+        quotaService.checkAndConsumeQuota(loginUser);
+        return createArticleTask(topic, style, enableImageMethods, loginUser);
     }
 
     /**

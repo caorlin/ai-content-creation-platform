@@ -28,7 +28,7 @@ public interface ArticleService extends IService<Article> {
      * @param loginUser          操作用户信息
      * @return 任务taskId
      */
-    String createArticleTask(String topic, String style, List<String> enableImageMethods, LoginUserVO loginUser);
+    String createArticleTask(String topic, String style, List<String> enableImageMethods, User loginUser);
 
     /**
      * 更新文章状态
@@ -132,4 +132,11 @@ public interface ArticleService extends IService<Article> {
      * @param taskId 文章任务id
      */
     Article getArticleByTaskId(String taskId);
+
+    /**
+     * 参加文章任务并且检查配额
+     * @param loginUser 登录用户
+     * @return 任务id
+     */
+    String createArticleTaskWithCheckQuota(String topic, String style, List<String> enableImageMethods, User loginUser);
 }

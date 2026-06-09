@@ -35,7 +35,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@Tag(name = "ArticleController",description = "文章管理接口")
+@Tag(name = "ArticleController", description = "文章管理接口")
 @RequestMapping("article")
 @RequiredArgsConstructor
 public class ArticleController {
@@ -56,10 +56,12 @@ public class ArticleController {
         ThrowUtils.throwIf(!ArticleStyleEnum.hasStyle(style), ErrorCode.PARAMS_ERROR, "无效的文章风格");
 
         //获取当前登录对象
-        LoginUserVO loginUser = userService.getLoginUser(httpServletRequest);
+        LoginUserVO userVO = userService.getLoginUser(httpServletRequest);
+        User loginUser = new User();
+        BeanUtils.copyProperties(userVO, loginUser);
 
         //执行文章任务创建
-        String taskId = articleService.createArticleTask(topic, style, enableImageMethods, loginUser);
+        String taskId = articleService.createArticleTaskWithCheckQuota(topic, style, enableImageMethods, loginUser);
 
         //阶段1：异步创建文章标题
         articleAsyncService.executeArticleTitleGeneratePhage(taskId, topic, style);
