@@ -1,4 +1,4 @@
-﻿﻿<template>
+﻿﻿﻿<template>
   <div class="article-create-page">
     <!-- 三栏布局容器 -->
     <div class="create-layout">
@@ -953,7 +953,7 @@ onBeforeUnmount(() => {
   }
 
   .active & {
-    background: rgba(34, 197, 94, 0.1);
+    background: rgba(24, 144, 255, 0.12);
     color: var(--color-primary);
     border: 2px solid var(--color-primary);
   }
@@ -1068,7 +1068,7 @@ onBeforeUnmount(() => {
 
   &:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.12);
   }
 }
 
@@ -1122,7 +1122,7 @@ onBeforeUnmount(() => {
 
     &:hover {
       border-color: var(--color-primary);
-      background: rgba(34, 197, 94, 0.03);
+      background: rgba(24, 144, 255, 0.04);
 
       .ant-radio-wrapper,
       .ant-checkbox-wrapper {
@@ -1132,7 +1132,7 @@ onBeforeUnmount(() => {
 
     &.active {
       border-color: var(--color-primary);
-      background: rgba(34, 197, 94, 0.08);
+      background: rgba(24, 144, 255, 0.10);
       box-shadow: 0 0 0 1px var(--color-primary);
 
       .ant-radio-wrapper,
@@ -1152,7 +1152,7 @@ onBeforeUnmount(() => {
   background: var(--gradient-primary) !important;
   border: none !important;
   color: white !important;
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3) !important;
+  box-shadow: 0 4px 14px rgba(24, 144, 255, 0.25) !important;
 
   &:hover,
   &:focus,
@@ -1160,7 +1160,7 @@ onBeforeUnmount(() => {
     background: var(--gradient-primary) !important;
     color: white !important;
     border: none !important;
-    box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3) !important;
+    box-shadow: 0 4px 14px rgba(24, 144, 255, 0.25) !important;
     opacity: 0.92;
   }
 
@@ -1212,12 +1212,12 @@ onBeforeUnmount(() => {
 
 .style-group :deep(.ant-radio-wrapper:hover) {
   border-color: var(--color-primary);
-  background: rgba(34, 197, 94, 0.04);
+  background: rgba(24, 144, 255, 0.06);
 }
 
 .style-group :deep(.ant-radio-wrapper-checked) {
   border-color: var(--color-primary);
-  background: rgba(34, 197, 94, 0.08);
+  background: rgba(24, 144, 255, 0.10);
 }
 
 /* 配图方式选择 */
@@ -1263,12 +1263,12 @@ onBeforeUnmount(() => {
 
 .methods-group :deep(.ant-checkbox-wrapper:hover) {
   border-color: var(--color-primary);
-  background: rgba(34, 197, 94, 0.04);
+  background: rgba(24, 144, 255, 0.06);
 }
 
 .methods-group :deep(.ant-checkbox-wrapper-checked) {
   border-color: var(--color-primary);
-  background: rgba(34, 197, 94, 0.08);
+  background: rgba(24, 144, 255, 0.10);
 }
 
 .methods-group :deep(.ant-checkbox-wrapper-disabled) {
@@ -1288,11 +1288,11 @@ onBeforeUnmount(() => {
   gap: 6px;
   margin-top: 12px;
   padding: 10px 14px;
-  background: rgba(34, 197, 94, 0.08);
+  background: rgba(24, 144, 255, 0.10);
   border-radius: var(--radius-md);
   font-size: 12px;
   color: var(--color-primary-dark);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(24, 144, 255, 0.2);
 
   .anticon {
     color: var(--color-primary);
@@ -1688,7 +1688,7 @@ onBeforeUnmount(() => {
   &:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
-    background: rgba(34, 197, 94, 0.05);
+    background: rgba(24, 144, 255, 0.06);
     transform: translateY(-1px);
   }
 }
@@ -1710,7 +1710,7 @@ onBeforeUnmount(() => {
   transition: all var(--transition-fast);
 
   &:hover {
-    background: rgba(34, 197, 94, 0.05);
+    background: rgba(24, 144, 255, 0.06);
   }
 }
 
@@ -1779,7 +1779,7 @@ onBeforeUnmount(() => {
   align-items: flex-start;
   gap: 8px;
   padding: 12px;
-  background: rgba(34, 197, 94, 0.08);
+  background: rgba(24, 144, 255, 0.10);
   border-radius: var(--radius-md);
   font-size: 12px;
   color: var(--color-primary-dark);
