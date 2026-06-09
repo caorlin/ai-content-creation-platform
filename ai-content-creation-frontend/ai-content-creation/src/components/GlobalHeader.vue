@@ -18,8 +18,8 @@ const selectedKeys = computed(() => [route.path])
 
 const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
   const keyStr = String(key)
-  // 创作历史需要登录
-  if (keyStr === '/article/list' && !loginUserStore.loginUser.id) {
+  // 文章创作和创作历史需要登录
+  if ((keyStr === '/article/create' || keyStr === '/article/list') && !loginUserStore.loginUser.id) {
     authModalVisible.value = true
     return
   }
@@ -44,7 +44,6 @@ const doLogout = async () => {
       username: '未登录',
     })
     message.success('退出登录成功')
-    await router.push('/user/login')
   } else {
     message.error('退出登录失败，' + res.data.message)
   }
