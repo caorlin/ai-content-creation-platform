@@ -1,4 +1,4 @@
-﻿declare namespace API {
+declare namespace API {
   type addUserParams = {
     userAddRequest: UserAddRequest
   }
@@ -175,8 +175,8 @@
     createTime?: string
     /** 更新时间 */
     updateTime?: string
-    /** VIP 到期时间 */
-    vipTime?: string
+    /** 用户使用配额 */
+    quota?: number
   }
 
   type OrderItem = {
@@ -264,6 +264,7 @@
     userAvatar?: string
     userProfile?: string
     userRole?: string
+    quota?: number
     editTime?: string
     createTime?: string
     updateTime?: string
@@ -340,4 +341,3 @@
     createTime?: string
   }
 }
-
