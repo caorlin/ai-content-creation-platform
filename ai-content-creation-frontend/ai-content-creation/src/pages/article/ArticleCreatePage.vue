@@ -1,4 +1,4 @@
-﻿<template>
+﻿﻿<template>
   <div class="article-create-page">
     <!-- 三栏布局容器 -->
     <div class="create-layout">
@@ -151,7 +151,8 @@
                 </a-button>
                 <div v-if="!hasQuota" class="quota-warning">
                   <WarningOutlined />
-                  <span>配额已用完，无法创建文章</span>
+                  <span>配额已用完</span>
+                  <RouterLink to="/vip" class="quota-warning-link">升级会员</RouterLink>
                 </div>
               </div>
             </div>
@@ -277,31 +278,37 @@
             <CrownOutlined />
             创作配额
           </h4>
-          <div v-if="isAdmin" class="quota-admin">
+
+          <!-- 管理员 -->
+          <div v-if="isAdmin" class="quota-card quota-card-admin">
             <span class="quota-badge admin">管理员</span>
-            <span class="quota-text">无限次</span>
+            <span class="quota-value">无限次</span>
           </div>
 
-          <div v-else-if="isVip" class="quota-admin">
+          <!-- VIP -->
+          <div v-else-if="isVip" class="quota-card quota-card-vip">
             <span class="quota-badge vip">VIP 会员</span>
-            <span class="quota-text">无限次</span>
+            <span class="quota-value">无限次</span>
           </div>
 
-          <div v-else class="quota-info">
-            <div class="quota-display">
-              <span class="quota-number" :class="{ low: quota <= 1, empty: quota === 0 }">{{
-                quota
-              }}</span>
-              <span class="quota-unit">次</span>
+          <!-- 普通用户 -->
+          <div v-else class="quota-card quota-card-normal">
+            <div class="quota-header">
+              <span class="quota-number" :class="{ low: quota <= 1, empty: quota === 0 }">{{ quota }}</span>
+              <span class="quota-unit">/ {{ totalQuota }} 次</span>
             </div>
-            <div class="quota-label">剩余可用</div>
+            <div class="quota-label">剩余创作次数</div>
             <a-progress
-              :percent="(quota / 5) * 100"
+              :percent="(quota / totalQuota) * 100"
               :show-info="false"
-              :stroke-color="quota <= 1 ? '#ff4d4f' : '#22C55E'"
-              size="small"
+              :stroke-color="quotaColor"
+              :stroke-width="6"
               class="quota-progress"
             />
+            <RouterLink v-if="quota <= 1" to="/vip" class="quota-upgrade-link">
+              <CrownOutlined />
+              升级会员，无限创作
+            </RouterLink>
           </div>
         </div>
 
@@ -479,6 +486,12 @@ const isVipOrAdmin = computed(() =>
 const isAdmin = computed(() => loginUserStore.loginUser.userRole === USER_ROLE_ADMIN)
 const isVip = computed(() => loginUserStore.loginUser.userRole === USER_ROLE_VIP)
 const quota = computed(() => loginUserStore.loginUser.quota ?? 0)
+const totalQuota = 5
+const quotaColor = computed(() => {
+  if (quota.value <= 0) return '#ff4d4f'
+  if (quota.value <= 1) return '#faad14'
+  return '#22C55E'
+})
 const hasQuota = computed(() => isAdmin.value || isVip.value || quota.value > 0)
 
 // 智能体步骤（对应后端 6 个步骤）
@@ -1516,53 +1529,66 @@ onBeforeUnmount(() => {
 
 /* 配额信息样式 */
 .quota-section {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(34, 197, 94, 0.02) 100%);
-  border-radius: var(--radius-lg);
-  padding: 16px !important;
-  margin: -8px -8px 12px -8px;
+  background: none;
+  padding: 0 !important;
+  margin: 0;
 }
 
-.quota-admin {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.quota-badge {
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: 600;
-
-  &.admin {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    color: white;
-  }
-
-  &.vip {
-    background: var(--gradient-primary);
-    color: white;
-  }
-}
-
-.quota-text {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-}
-
-.quota-info {
+.quota-card {
+  padding: 16px;
+  border-radius: var(--radius-md);
   text-align: center;
 }
 
-.quota-display {
+.quota-card-admin {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+}
+
+.quota-card-vip {
+  background: var(--gradient-primary);
+}
+
+.quota-card-normal {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-light);
+}
+
+.quota-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+
+  &.admin {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  &.vip {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+  }
+}
+
+.quota-value {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.quota-header {
   display: flex;
   align-items: baseline;
   justify-content: center;
   gap: 4px;
+  margin-bottom: 4px;
 }
 
 .quota-number {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 700;
   color: var(--color-primary);
   line-height: 1;
@@ -1577,19 +1603,68 @@ onBeforeUnmount(() => {
 }
 
 .quota-unit {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--color-text-muted);
 }
 
 .quota-label {
   font-size: 12px;
   color: var(--color-text-muted);
-  margin: 4px 0 12px;
+  margin-bottom: 12px;
 }
 
 .quota-progress {
-  max-width: 120px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0 0 12px;
+}
+
+.quota-progress :deep(.ant-progress-bg) {
+  border-radius: var(--radius-full);
+}
+
+.quota-upgrade-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.quota-upgrade-link:hover {
+  opacity: 0.8;
+}
+
+/* 配额警告 */
+.quota-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 77, 79, 0.08);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 77, 79, 0.15);
+  font-size: 13px;
+  color: #ff4d4f;
+}
+
+.quota-warning .anticon {
+  font-size: 14px;
+}
+
+.quota-warning-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.quota-warning-link:hover {
+  text-decoration: underline;
 }
 
 /* 热门选题 */
