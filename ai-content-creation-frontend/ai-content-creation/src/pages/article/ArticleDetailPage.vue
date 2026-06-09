@@ -97,7 +97,11 @@
               </div>
             </div>
           </div>
-          <div v-if="article.content" v-html="markdownToHtml(article.content)" class="markdown-content"></div>
+          <div
+            v-if="article.content"
+            v-html="markdownToHtml(article.content)"
+            class="markdown-content"
+          ></div>
         </div>
       </div>
     </template>
@@ -160,12 +164,19 @@ const safeJsonParse = (value: unknown): unknown => {
   }
 }
 
+// 大纲项类型
+interface OutlineItem {
+  title: string
+  points: string[]
+  section: number
+}
+
 /** 解析后的 outline，兼容后端返回 JSON 字符串 */
-const parsedOutline = computed<API.OutlineItem[]>(() => {
+const parsedOutline = computed<OutlineItem[]>(() => {
   const raw = article.value?.outline
   if (!raw) return []
   const parsed = safeJsonParse(raw)
-  return Array.isArray(parsed) ? (parsed as API.OutlineItem[]) : []
+  return Array.isArray(parsed) ? (parsed as OutlineItem[]) : []
 })
 
 /** 解析后的 images，兼容后端返回 JSON 字符串 */
@@ -174,12 +185,14 @@ const parsedImages = computed<string[]>(() => {
   if (!raw) return []
   const parsed = safeJsonParse(raw)
   if (!Array.isArray(parsed)) return []
-  return parsed.map((item: unknown) => {
-    if (typeof item === 'string') return item
-    if (item && typeof item === 'object' && 'url' in (item as Record<string, unknown>))
-      return (item as Record<string, unknown>).url as string
-    return ''
-  }).filter(Boolean)
+  return parsed
+    .map((item: unknown) => {
+      if (typeof item === 'string') return item
+      if (item && typeof item === 'object' && 'url' in (item as Record<string, unknown>))
+        return (item as Record<string, unknown>).url as string
+      return ''
+    })
+    .filter(Boolean)
 })
 
 const formatOutlinePoints = (points?: string[]): string => {
