@@ -22,4 +22,7 @@
         id,user_account,user_password,userName,user_avatar,user_profile,
         user_role,edit_time,create_time,update_time,is_delete
     </sql>
+    <update id="decrementQuota" parameterType="long">
+        UPDATE user SET quota = quota - 1 WHERE id = #{userId} AND quota > 0
+    </update>
 </mapper>
