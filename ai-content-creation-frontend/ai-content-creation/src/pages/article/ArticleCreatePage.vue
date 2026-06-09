@@ -102,7 +102,11 @@
                       class="style-option"
                       :class="{ active: enabledImageMethods.includes(`NANO_BANANA`) }"
                     >
-                      <a-checkbox value="NANO_BANANA" :disabled="!isVipOrAdmin">Nano Banana<span v-if="!isVipOrAdmin" class="vip-icon">VIP</span></a-checkbox>
+                      <a-checkbox value="NANO_BANANA" :disabled="!isVipOrAdmin"
+                        >Nano Banana<span v-if="!isVipOrAdmin" class="vip-icon"
+                          >VIP</span
+                        ></a-checkbox
+                      >
                     </div>
                     <div
                       class="style-option"
@@ -126,7 +130,9 @@
                       class="style-option"
                       :class="{ active: enabledImageMethods.includes(`SVG_DIAGRAM`) }"
                     >
-                      <a-checkbox value="SVG_DIAGRAM" :disabled="!isVipOrAdmin">SVG<span v-if="!isVipOrAdmin" class="vip-icon">VIP</span></a-checkbox>
+                      <a-checkbox value="SVG_DIAGRAM" :disabled="!isVipOrAdmin"
+                        >SVG<span v-if="!isVipOrAdmin" class="vip-icon">VIP</span></a-checkbox
+                      >
                     </div>
                   </a-checkbox-group>
                 </div>
@@ -266,6 +272,39 @@
 
       <!-- 右侧：辅助面板 -->
       <aside class="sidebar-right">
+        <div v-if="currentPhase === 'INPUT'" class="panel-section quota-section">
+          <h4 class="panel-title">
+            <CrownOutlined />
+            创作配额
+          </h4>
+          <div v-if="isAdmin" class="quota-admin">
+            <span class="quota-badge admin">管理员</span>
+            <span class="quota-text">无限次</span>
+          </div>
+
+          <div v-else-if="isVip" class="quota-admin">
+            <span class="quota-badge vip">VIP 会员</span>
+            <span class="quota-text">无限次</span>
+          </div>
+
+          <div v-else class="quota-info">
+            <div class="quota-display">
+              <span class="quota-number" :class="{ low: quota <= 1, empty: quota === 0 }">{{
+                quota
+              }}</span>
+              <span class="quota-unit">次</span>
+            </div>
+            <div class="quota-label">剩余可用</div>
+            <a-progress
+              :percent="(quota / 5) * 100"
+              :show-info="false"
+              :stroke-color="quota <= 1 ? '#ff4d4f' : '#22C55E'"
+              size="small"
+              class="quota-progress"
+            />
+          </div>
+        </div>
+
         <!-- 热门选题 -->
         <div v-if="!isCreating && !isCompleted" class="panel-section">
           <h4 class="panel-title">
@@ -421,16 +460,26 @@ import {
   EyeOutlined,
   RedoOutlined,
   BarChartOutlined,
+  CrownOutlined,
 } from '@ant-design/icons-vue'
 import OutlineEditingStage from '@/pages/article/components/OutlineEditingStage.vue'
 import TitleSelectingStage from '@/pages/article/components/TitleSelectingStage.vue'
 import { useLoginUserStore } from '@/stores/loginUser'
+import { USER_ROLE_ADMIN, USER_ROLE_VIP } from '@/constant/user.ts'
 
 const router = useRouter()
 const route = useRoute()
 
 const loginUserStore = useLoginUserStore()
-const isVipOrAdmin = computed(() => ['vip', 'admin'].includes(loginUserStore.loginUser.userRole || ''))
+const isVipOrAdmin = computed(() =>
+  ['vip', 'admin'].includes(loginUserStore.loginUser.userRole || ''),
+)
+
+// 配额相关计算属性
+const isAdmin = computed(() => loginUserStore.loginUser.userRole === USER_ROLE_ADMIN)
+const isVip = computed(() => loginUserStore.loginUser.userRole === USER_ROLE_VIP)
+const quota = computed(() => loginUserStore.loginUser.quota ?? 0)
+const hasQuota = computed(() => isAdmin.value || isVip.value || quota.value > 0)
 
 // 智能体步骤（对应后端 6 个步骤）
 const agentSteps = [
@@ -463,7 +512,6 @@ const currentStep = ref(0)
 const taskId = ref('')
 const errorVisible = ref(false)
 const errorMessage = ref('')
-const hasQuota = ref(true)
 const enabledImageMethods = ref<String[]>([])
 
 // 大纲数据（流式）
@@ -480,7 +528,7 @@ const article = ref<Partial<ArticleVO>>({
   subTitle: '',
   content: '',
   fullContent: '',
-  images: [],
+  images: '',
 })
 
 // 阶段状态
