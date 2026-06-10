@@ -15,5 +15,5 @@ public @interface AgentExecution {
     /**
      * 描述
      */
-    String description();
+    String description() default "";
 }
