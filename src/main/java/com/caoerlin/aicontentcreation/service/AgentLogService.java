@@ -2,6 +2,7 @@ package com.caoerlin.aicontentcreation.service;
 
 import com.caoerlin.aicontentcreation.model.entity.AgentLog;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.caoerlin.aicontentcreation.model.vo.agentlog.AgentExecutionStats;
 
 /**
  * @author Administrator
@@ -16,4 +17,12 @@ public interface AgentLogService extends IService<AgentLog> {
      * @param agentLog agent日志对象
      */
     void saveLogAsync(AgentLog agentLog);
+
+    /**
+     * 获取执行日志
+     *
+     * @param taskId 任务id
+     * @return 执行日志信息
+     */
+    AgentExecutionStats getExecutionStats(String taskId);
 }

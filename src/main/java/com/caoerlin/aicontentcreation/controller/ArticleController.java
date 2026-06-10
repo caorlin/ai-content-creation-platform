@@ -14,8 +14,10 @@ import com.caoerlin.aicontentcreation.manager.SseEmitterManager;
 import com.caoerlin.aicontentcreation.model.dto.article.*;
 import com.caoerlin.aicontentcreation.model.entity.User;
 import com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum;
+import com.caoerlin.aicontentcreation.model.vo.agentlog.AgentExecutionStats;
 import com.caoerlin.aicontentcreation.model.vo.article.ArticleVO;
 import com.caoerlin.aicontentcreation.model.vo.user.LoginUserVO;
+import com.caoerlin.aicontentcreation.service.AgentLogService;
 import com.caoerlin.aicontentcreation.service.ArticleAsyncService;
 import com.caoerlin.aicontentcreation.service.ArticleService;
 import com.caoerlin.aicontentcreation.service.UserService;
@@ -43,6 +45,7 @@ public class ArticleController {
     private final ArticleService articleService;
     private final ArticleAsyncService articleAsyncService;
     private final SseEmitterManager sseEmitterManager;
+    private final AgentLogService agentLogService;
 
     @PostMapping("create")
     @Operation(summary = "文章创建接口")
@@ -195,4 +198,10 @@ public class ArticleController {
         return ResultUtils.success(result);
     }
 
+    @GetMapping("execution/log/{taskId}")
+    @Operation(summary = "获取执行日志接口")
+    public BaseResponse<AgentExecutionStats> getExecutionLogs(@PathVariable String taskId, HttpServletRequest request) {
+        ThrowUtils.throwIf(StrUtil.isBlank(taskId), ErrorCode.PARAMS_ERROR,"请输入任务id");
+        return ResultUtils.success(agentLogService.getExecutionStats(taskId));
+    }
 }
