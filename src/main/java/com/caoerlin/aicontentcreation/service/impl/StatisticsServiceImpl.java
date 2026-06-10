@@ -40,7 +40,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         //先从缓存中获取
         String statisticsStr = redisTemplate.opsForValue().get(StatisticsRedisConstant.STATISTICS_CACHE_KEY);
         if (StrUtil.isNotBlank(statisticsStr)) {
-            log.info("从缓存中获取到数据,data={}", statisticsStr);
+            log.info("从缓存中获取到数据");
             return JSONUtil.toBean(statisticsStr, StatisticsVO.class);
         }
 
