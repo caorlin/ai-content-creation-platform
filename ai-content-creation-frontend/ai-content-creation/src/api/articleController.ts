@@ -43,6 +43,20 @@ export async function deleteArticle(body: API.DeleteRequest, options?: { [key: s
   })
 }
 
+/** 获取执行日志接口 GET /article/execution/log/${param0} */
+export async function getExecutionLogs(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getExecutionLogsParams,
+  options?: { [key: string]: any }
+) {
+  const { taskId: param0, ...queryParams } = params
+  return request<API.BaseResponseAgentExecutionStats>(`/article/execution/log/${param0}`, {
+    method: 'GET',
+    params: { ...queryParams },
+    ...(options || {}),
+  })
+}
+
 /** 分页查询文章列表 POST /article/list */
 export async function listArticle(body: API.ArticleQueryRequest, options?: { [key: string]: any }) {
   return request<API.BaseResponsePageArticleVO>('/article/list', {
