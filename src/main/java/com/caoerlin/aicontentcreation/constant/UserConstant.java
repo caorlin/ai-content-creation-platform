@@ -40,4 +40,6 @@ public interface UserConstant {
      * 用户 vip 角色标识
      */
     String VIP_ROLE = "vip";
+
+    Integer DEFAULT_QUOTA = 5;
 }

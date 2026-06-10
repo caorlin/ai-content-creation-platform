@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.caoerlin.aicontentcreation.constant.UserConstant.DEFAULT_PASSWORD;
+import static com.caoerlin.aicontentcreation.constant.UserConstant.DEFAULT_QUOTA;
 
 /**
  * 用户控制层
@@ -73,6 +74,7 @@ public class UserController {
         BeanUtil.copyProperties(userAddRequest, user);
         String encryptPassword = userService.getEncryptPassword(DEFAULT_PASSWORD);
         user.setUserPassword(encryptPassword);
+        user.setQuota(DEFAULT_QUOTA);
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(user.getId());

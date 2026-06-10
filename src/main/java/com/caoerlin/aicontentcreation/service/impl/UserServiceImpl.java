@@ -28,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
+import static com.caoerlin.aicontentcreation.constant.UserConstant.DEFAULT_QUOTA;
 import static com.caoerlin.aicontentcreation.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
@@ -87,6 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             String name = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
             user.setUsername("创作者" + name);
             user.setUserRole(UserRoleEnum.USER.getValue());
+            user.setQuota(DEFAULT_QUOTA);
             //插入数据
             boolean result = save(user);
             if (!result) {
