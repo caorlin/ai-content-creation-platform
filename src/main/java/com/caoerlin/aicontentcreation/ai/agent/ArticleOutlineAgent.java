@@ -7,6 +7,7 @@ import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
 import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
 import com.caoerlin.aicontentcreation.ai.utils.AiResponseParseUtils;
+import com.caoerlin.aicontentcreation.common.annotation.AgentExecution;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import static com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum.getArt
 public class ArticleOutlineAgent {
     private final ChatModel articleContentModel;
 
+    @AgentExecution(value = "ARTICLE_OUTLINE_AGENT", description = "文章大纲生成Agent")
     public void generateArticleOutline(ArticleState articleState, Consumer<String> consumer) {
         if (ObjectUtil.isNull(articleState)) {
             log.error("生成文章大纲异常,文章状态为空");
@@ -68,6 +70,7 @@ public class ArticleOutlineAgent {
      * @param modifySuggestion   用户的修改建议
      * @return 修改后的大纲
      */
+    @AgentExecution(value = "AI_MODIFY_OUTLINE_AGENT", description = "AI修改文章大纲生成Agent")
     public List<ArticleState.OutlineSection> aiModifyOutline(String mainTitle, String subTitle, List<ArticleState.OutlineSection> currentOutlineList, String modifySuggestion) {
 
         String currentOutline = JSONUtil.toJsonStr(currentOutlineList);

@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
 import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
 import com.caoerlin.aicontentcreation.ai.utils.AiResponseParseUtils;
+import com.caoerlin.aicontentcreation.common.annotation.AgentExecution;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.enums.ImageMethodEnum;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.List;
 public class ArticleImageRequirementsAgent {
     private final ChatModel articleContentModel;
 
+    @AgentExecution(value = "ARTICLE_IMAGE_REQUIREMENTS_AGENT", description = "文章配图需求分析Agent")
     public void analyzeArticleIllustration(ArticleState state) {
         if (ObjectUtil.isNull(state)) {
             log.error("生成文章内容异常,文章状态为空");

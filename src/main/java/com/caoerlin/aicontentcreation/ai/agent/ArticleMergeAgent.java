@@ -1,6 +1,7 @@
 package com.caoerlin.aicontentcreation.ai.agent;
 
 import cn.hutool.core.util.StrUtil;
+import com.caoerlin.aicontentcreation.common.annotation.AgentExecution;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ public class ArticleMergeAgent {
     /**
      * 图文合成：将配图插入正文对应位置
      */
+    @AgentExecution(value = "ARTICLE_MERGE_AGENT", description = "文章图文合并Agent")
     public void mergeArticleAndImage(ArticleState state) {
         String content = state.getContent();
         List<ArticleState.ImageResult> images = state.getImages();

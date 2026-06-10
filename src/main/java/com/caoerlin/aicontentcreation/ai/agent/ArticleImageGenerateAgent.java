@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
+import com.caoerlin.aicontentcreation.common.annotation.AgentExecution;
 import com.caoerlin.aicontentcreation.manager.CosManager;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import com.caoerlin.aicontentcreation.model.dto.image.ImageRequest;
@@ -26,6 +27,7 @@ public class ArticleImageGenerateAgent {
     private final CosManager cosManager;
     private final ImageServiceStrategy imageServiceStrategy;
 
+    @AgentExecution(value = "ARTICLE_IMAGE_GENERATE_AGENT", description = "文章配图检索Agent")
     public void generateArticleImage(ArticleState state, Consumer<String> streamHandler) {
         if (ObjectUtil.isNull(state) && CollectionUtil.isEmpty(state.getImageRequirements())) {
             log.warn("开始执行 ArticleImageGenerateAgent,参数异常: taskId={},ArticleState={}", state.getTaskId(), JSONUtil.toJsonStr(state));

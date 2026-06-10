@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.caoerlin.aicontentcreation.ai.common.enums.SseMessageTypeEnum;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
 import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
+import com.caoerlin.aicontentcreation.common.annotation.AgentExecution;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ import static com.caoerlin.aicontentcreation.model.enums.ArticleStyleEnum.getArt
 public class ArticleContentAgent {
     private final ChatModel articleContentModel;
 
+    @AgentExecution(value = "ARTICLE_CONTENT_AGENT", description = "文章内容生成Agent")
     public void generateArticleContent(ArticleState state, Consumer<String> streamHandler) {
         if (ObjectUtil.isNull(state)) {
             log.error("生成文章内容异常,文章状态为空");

@@ -3,6 +3,7 @@ package com.caoerlin.aicontentcreation.ai.agent;
 import com.caoerlin.aicontentcreation.ai.constant.PromptConstant;
 import com.caoerlin.aicontentcreation.ai.utils.AiModelCallingUtils;
 import com.caoerlin.aicontentcreation.ai.utils.AiResponseParseUtils;
+import com.caoerlin.aicontentcreation.common.annotation.AgentExecution;
 import com.caoerlin.aicontentcreation.model.dto.article.ArticleState;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class ArcticTitleAgent {
      *
      * @param state 文章状态
      */
+    @AgentExecution(value = "ARTICLE_TITLE_AGENT", description = "文章标题生成Agent")
     public void generateArticleTitle(ArticleState state) {
         //文章选题
         String topic = state.getTopic();
