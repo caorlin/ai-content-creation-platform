@@ -146,6 +146,12 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponseStatisticsVO = {
+    code?: number
+    data?: StatisticsVO
+    message?: string
+  }
+
   type BaseResponseString = {
     code?: number
     data?: string
@@ -290,6 +296,28 @@ declare namespace API {
 
   type SseEmitter = {
     timeout?: number
+  }
+
+  type StatisticsVO = {
+    /** 今日创作数量 */
+    todayCount?: number
+    /** 本周创作数量 */
+    weekCount?: number
+    /** 本月创作数量 */
+    monthCount?: number
+    /** 总创作数量 */
+    totalCount?: number
+    /** 成功率（百分比） */
+    successRate?: number
+    /** 平均耗时（毫秒） */
+    avgDurationMs?: number
+    /** 活跃用户数（本周） */
+    activeUserCount?: number
+    totalUserCount?: number
+    /** 总用户数 */
+    vipUserCount?: number
+    /** 配额总使用量 */
+    quotaUsed?: number
   }
 
   type User = {
