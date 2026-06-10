@@ -4,21 +4,25 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
+
 import lombok.Data;
 
 /**
  * 智能体执行日志表
+ *
  * @TableName agent_log
  */
-@TableName(value ="agent_log")
+@TableName(value = "agent_log")
 @Data
 public class AgentLog implements Serializable {
     /**
      * id
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -84,8 +88,9 @@ public class AgentLog implements Serializable {
     /**
      * 是否删除
      */
-    private Integer isdelete;
+    private Integer isDelete;
 
+    @Serial
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

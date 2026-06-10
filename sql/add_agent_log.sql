@@ -14,7 +14,7 @@ create table if not exists agent_log
     output_data      json                               null comment '输出数据（JSON格式）',
     create_time      datetime    default CURRENT_TIMESTAMP not null comment '创建时间',
     update_time      datetime    default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
-    isDelete        tinyint     default 0              not null comment '是否删除',
+    is_delete        tinyint     default 0              not null comment '是否删除',
     INDEX idx_task_id (task_id),
     INDEX idx_agent_name (agent_name),
     INDEX idx_status (status),

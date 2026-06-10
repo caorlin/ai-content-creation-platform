@@ -18,12 +18,12 @@
             <result property="outputData" column="output_data" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
-            <result property="isdelete" column="isDelete" />
+            <result property="isDelete" column="is_delete" />
     </resultMap>
 
     <sql id="Base_Column_List">
         id,task_id,agent_name,start_time,end_time,duration_ms,
         status,error_message,prompt,input_data,output_data,
-        create_time,update_time,isDelete
+        create_time,update_time,is_delete
     </sql>
 </mapper>
