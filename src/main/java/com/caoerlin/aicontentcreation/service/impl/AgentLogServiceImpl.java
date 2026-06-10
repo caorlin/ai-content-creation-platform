@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.caoerlin.aicontentcreation.common.exception.BusinessException;
 import com.caoerlin.aicontentcreation.common.exception.ErrorCode;
 import com.caoerlin.aicontentcreation.constant.AgentStatusConstant;
-import com.caoerlin.aicontentcreation.constant.ArticleConstant;
 import com.caoerlin.aicontentcreation.model.entity.AgentLog;
 import com.caoerlin.aicontentcreation.model.enums.AgentStatusEnum;
 import com.caoerlin.aicontentcreation.model.vo.agentlog.AgentExecutionStats;
@@ -104,9 +103,11 @@ public class AgentLogServiceImpl extends ServiceImpl<AgentLogMapper, AgentLog>
                 .build();
     }
 
-    private List<AgentLog> getAgentLogByTaskId(String taskId) {
+    @Override
+    public List<AgentLog> getAgentLogByTaskId(String taskId) {
         LambdaQueryWrapper<AgentLog> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(AgentLog::getTaskId, taskId);
+        wrapper.eq(AgentLog::getTaskId, taskId)
+                .orderBy(true, true, AgentLog::getCreateTime);
         return agentLogMapper.selectList(wrapper);
     }
 }
