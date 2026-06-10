@@ -1,5 +1,11 @@
 ﻿import type { MenuProps } from 'ant-design-vue'
-import { BulbTwoTone, HomeTwoTone, ProfileTwoTone } from '@ant-design/icons-vue'
+import {
+  BulbTwoTone,
+  HomeTwoTone,
+  IdcardTwoTone,
+  PieChartTwoTone,
+  ProfileTwoTone,
+} from '@ant-design/icons-vue'
 import { h } from 'vue'
 
 export const headerMenuItems: MenuProps['items'] = [
@@ -23,7 +29,14 @@ export const headerMenuItems: MenuProps['items'] = [
   },
   {
     key: '/admin/userManage',
+    icon: () => h(IdcardTwoTone),
     label: '用户管理',
     title: '用户管理',
+  },
+  {
+    key: '/admin/statistics',
+    icon: () => h(PieChartTwoTone),
+    label: '数据统计',
+    title: '数据统计',
   },
 ]
