@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.Data;
@@ -38,12 +39,12 @@ public class AgentLog implements Serializable {
     /**
      * 开始时间
      */
-    private Date startTime;
+    private LocalDateTime startTime;
 
     /**
      * 结束时间
      */
-    private Date endTime;
+    private LocalDateTime endTime;
 
     /**
      * 耗时（毫秒）
@@ -68,22 +69,22 @@ public class AgentLog implements Serializable {
     /**
      * 输入数据（JSON格式）
      */
-    private Object inputData;
+    private String inputData;
 
     /**
      * 输出数据（JSON格式）
      */
-    private Object outputData;
+    private String outputData;
 
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除
